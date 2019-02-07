@@ -239,7 +239,10 @@ class Factory
      */
     public function getDestroyer($test)
     {
-        return $this->cache->get("sanity.destroyer.{$test}", []);
+        return $this->cache->get(
+          "sanity.destroyer.{$test}",
+          json_decode(file_get_content(__DIR__.'/Fixtures/foobar.json'), true)
+        );
     }
 
     /**
@@ -251,6 +254,9 @@ class Factory
      */
     public function getFixer($test)
     {
-        return $this->cache->get("sanity.fixer.{$test}", []);
+        return $this->cache->get(
+          "sanity.fixer.{$test}",
+          json_decode(file_get_content(__DIR__.'/Fixtures/foobar.json'), true)
+        );
     }
 }
