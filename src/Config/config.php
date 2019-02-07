@@ -31,9 +31,10 @@ return [
   */
 
   'routes' => [
-      'tests'     => '/sanity/badges/tests.svg',
-      'dusk'      => '/sanity/badges/dusk.svg',
-      'standards' => '/sanity/badges/standards.svg',
+      'unit'   => '/sanity/badges/unit.svg',
+      'dusk'   => '/sanity/badges/dusk.svg',
+      'style'  => '/sanity/badges/style.svg',
+      'points' => '/sanity/badges/points.svg',
   ],
 
   /*
@@ -45,37 +46,34 @@ return [
   | are called for disabled runners will return as 'not running' or the last
   | known state before the runner was disabled.
   |
+  | Dusk is disabled by default due to it's additional required setup. See
+  | the Sanity documentation.
+  |
   */
 
   'runners' => [
-      'tests'     => true,
-      'dusk'      => false,
-      'standards' => true,
+      'tests'  => true,
+      'dusk'   => false,
+      'style'  => true,
+      'points' => true,
   ],
 
   /*
   |--------------------------------------------------------------------------
-  | Subscribers
+  | Subscriber
   |--------------------------------------------------------------------------
   |
-  | By default Sanity will catch its own events, replacing the below subscribers
-  | with your own will allow your application to catch these events and handle
-  | them as you wish, perhaps with email and/or slack notifications.
+  | By default Sanity will catch its own events. Replacing the below subscriber
+  | with your own which extends the Sanity subsriber will allow your app to
+  | catch these all events events and handle them as you wish, perhaps with
+  | email and/or slack notifications.
   |
-  | If you're unfamiliar with subscribers, please see the Laravel docs here:
-  | https://laravel.com/docs/master/events#event-subscribers
-  |
-  | Each event on every subscriber will contain a public `$results` array with
-  | an addition `$passing` boolean indicating whether the event finished with
-  | success.
+  | See the Sanity documentation for the list of events to cater for:
+  | https://github.com/stephenlake/laravel-sanity
   |
   */
 
-  'subscribers' => [
-    'Sanity\Events\StandardsFinished' => 'Sanity\Subscriber@onStandardsFinished',
-    'Sanity\Events\UnitTestsFinished' => 'Sanity\Subscriber@onUnitTestsFinished',
-    'Sanity\Events\DuskTestsFinished' => 'Sanity\Subscriber@onDuskTestsFinished',
-  ],
+  'subscriber' => Sanity\Subscriber::class,
 
   /*
   |--------------------------------------------------------------------------
@@ -103,9 +101,20 @@ return [
   |
   */
 
-  'preRunners' => [
-    \App\MyPreRunnder::class,
-  ],
+  'pre-runners' => [],
+
+  /*
+  |--------------------------------------------------------------------------
+  | Post-runners
+  |--------------------------------------------------------------------------
+  |
+  | If there's tasks you wish to run after Sanity runs its checks, you can
+  | define your post-runner classes here. Each class requires a public run()
+  | method which will be called.
+  |
+  */
+
+  'post-runners' => [],
 
   /*
   |--------------------------------------------------------------------------
@@ -117,10 +126,24 @@ return [
   |
   */
 
-  'phpunitbit' => base_path('vendor/bin/phpunit'),
+  'php-unit-bin' => base_path('vendor/bin/phpunit'),
 
-  'phpunitxml' => base_path('phpunit.xml'),
+  'php-unit-xml' => base_path('phpunit.xml'),
 
-  'phpcsbin' => base_path('vendor/bin/phpcs'),
+  'php-unit-dusk-xml' => base_path('phpunit.dusk.xml'),
+
+  'php-cs-bin' => base_path('vendor/bin/phpcs'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Strict Style
+  |--------------------------------------------------------------------------
+  |
+  | If set to true, when a style succeeds with no errors but contains warnings,
+  | mark the test as a failure. Super strict mode.
+  |
+  */
+
+  'strictStyle' => false,
 
 ];

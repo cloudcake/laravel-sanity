@@ -14,7 +14,7 @@ class Badges
     private $cache;
 
     const LABEL_TESTS = 'tests';
-    const LABEL_STANDARDS = 'coding standards';
+    const LABEL_STANDARDS = 'style';
     const LABEL_DUSK = 'dusk';
 
     const VALUE_DEFAULT = 'not running';
@@ -34,11 +34,11 @@ class Badges
     }
 
     /**
-     * Get tests badge.
+     * Get unit tests badge.
      *
      * @return \Illuminate\Routing\ResponseFactory
      */
-    public function tests()
+    public function unit()
     {
         $label = rawurlencode(self::LABEL_TESTS);
         $status = rawurlencode($this->cache->get('sanity.status.tests', self::VALUE_DEFAULT));
@@ -48,11 +48,11 @@ class Badges
     }
 
     /**
-     * Get standards badge.
+     * Get coding styles badge.
      *
      * @return \Illuminate\Routing\ResponseFactory
      */
-    public function standards()
+    public function style()
     {
         $label = rawurlencode(self::LABEL_STANDARDS);
         $status = rawurlencode($this->cache->get('sanity.status.standards', self::VALUE_DEFAULT));
@@ -62,7 +62,7 @@ class Badges
     }
 
     /**
-     * Get dusk badge.
+     * Get dusk tests badge.
      *
      * @return \Illuminate\Routing\ResponseFactory
      */

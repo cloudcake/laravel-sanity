@@ -2,9 +2,13 @@
 
 namespace Sanity;
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use Sanity\Events\DuskSucceeded;
+use Sanity\Events\DuskFailed;
+use Sanity\Events\StyleSucceeded;
+use Sanity\Events\StyleFailed;
+use Sanity\Events\UnitSucceeded;
+use Sanity\Events\UnitFailed;
 
 class Factory
 {
@@ -54,9 +58,10 @@ class Factory
         $this->runPreRunners();
 
         $runners = config('sanity.runners', [
-            'tests'     => true,
-            'dusk'      => true,
-            'standards' => true,
+            'tests'  => true,
+            'dusk'   => false,
+            'style'  => true,
+            'points' => true,
         ]);
 
         if ($runners['tests'] === true) {
@@ -67,9 +72,15 @@ class Factory
             $this->runDuskTests();
         }
 
-        if ($runners['standards'] === true) {
-            $this->runStandards();
+        if ($runners['style'] === true) {
+            $this->runStyleTests();
         }
+
+        if ($runners['points'] === true) {
+            $this->updatePointsLeaderboard();
+        }
+
+        $this->runPostRunners();
     }
 
     /**
@@ -79,66 +90,102 @@ class Factory
      */
     public function runPreRunners()
     {
-        $preRunners = config('sanity.preRunners', []);
+        $preRunners = config('sanity.pre-runners', []);
 
         if (count($preRunners)) {
             foreach ($preRunners as $runner) {
                 if (class_exists($runner)) {
-                    try {
-                        (new $runner())->run($this->deployment);
-                    } catch (\Exception $e) {
-                        Log::error("Sanity could not run prerunnger {$runner}: {$e->getMessage()}");
-                    }
+                    (new $runner())->run($this->deployment);
                 }
             }
         }
     }
 
     /**
-     * Run PHPCS tests.
+     * Tasks to run after running tests.
      *
      * @return void
      */
-    public function runStandards()
+    public function runPostRunners()
     {
-        $phpcsPath = config('phpcsbin', base_path('vendor/bin/phpcs'));
+        $postRunners = config('sanity.post-runners', []);
 
-        chmod($phpcsPath, 0755);
-
-        $results = json_decode(exec("php {$phpcsPath} --report=json"), true);
-
-        $passing = $results['totals']['errors'] == 0;
-
-        $passingBefore = $this->cache->get('sanity.status.standards', false);
-
-        $this->cache->forever('sanity.status.standards', $passing ? 'PASSING' : 'FAILING');
-
-        event(new \Sanity\Events\StandardsFinished($results, $passing, ($passingBefore == 'PASSING'), $this->deployment));
+        if (count($postRunners)) {
+            foreach ($postRunners as $runner) {
+                if (class_exists($runner)) {
+                    (new $runner())->run($this->deployment);
+                }
+            }
+        }
     }
 
     /**
-     * Run PHPUnit tests.
+     * Run style tests.
+     *
+     * @return void
+     */
+    public function runStyleTests()
+    {
+        $phpcsPath = config('phpcsbin', base_path('vendor/bin/phpcs'));
+
+        $result = json_decode(exec("php {$phpcsPath} --report=json"), true);
+
+        $passing = $result['totals']['errors'] == 0;
+
+        if ($passing && config('sanity.strictStyle')) {
+            $passing = $result['totals']['warnings'] == 0;
+        }
+
+        $passingBefore = $this->cache->get('sanity.status.standards', false) == 'PASSING';
+
+        $this->cache->forever('sanity.status.standards', $passing ? 'PASSING' : 'FAILING');
+
+        $changed = $passingBefore != $passing;
+
+        if ($passing) {
+            if (!$passingBefore) {
+                $this->cache->forever('sanity.fixer.style', $this->deployment);
+            }
+            event(new StyleSucceeded($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
+        } else {
+            if ($passingBefore) {
+                $this->cache->forever('sanity.destroyer.style', $this->deployment);
+            }
+            event(new StyleFailed($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
+        }
+    }
+
+    /**
+     * Run unit tests.
      *
      * @return void
      */
     public function runUnitTests()
     {
-        $phpunitPath = config('phpunitbin', base_path('vendor/bin/phpunit'));
-        $phpunitPathAlt = base_path('vendor/phpunit/phpunit/phpunit');
-        $phpunitXmlPath = config('phpunitxml', base_path('phpunit.xml'));
-
-        chmod($phpunitPath, 0755);
-        chmod($phpunitPathAlt, 0755);
+        $phpunitPath = config('php-unit-bin', base_path('vendor/bin/phpunit'));
+        $phpunitXmlPath = config('php-unit-xml', base_path('phpunit.xml'));
 
         exec("php {$phpunitPath} -c {$phpunitXmlPath}", $result, $code);
 
         $passing = $code == 0;
 
-        $passingBefore = $this->cache->get('sanity.status.tests', false);
+        $passingBefore = $this->cache->get('sanity.status.unit', false) == 'PASSING';
 
-        $this->cache->forever('sanity.status.tests', $passing ? 'PASSING' : 'FAILING');
+        $this->cache->forever('sanity.status.unit', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\UnitTestsFinished($result, $passing, ($passingBefore == 'PASSING'), $this->deployment));
+        $changed = $passingBefore != $passing;
+
+        if ($passing) {
+            if (!$passingBefore) {
+                $this->cache->forever('sanity.fixer.unit', $this->deployment);
+            }
+            event(new UnitSucceeded($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+        } else {
+            if ($passingBefore) {
+                $this->cache->forever('sanity.destroyer.unit', $this->deployment);
+            }
+            event(new UnitFailed($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+        }
     }
 
     /**
@@ -148,14 +195,62 @@ class Factory
      */
     public function runDuskTests()
     {
-        exec('php '.base_path('artisan').' sanity:dusk --without-tty', $result, $code);
+        $phpunitPath = config('php-unit-bin', base_path('vendor/bin/phpunit'));
+        $phpunitXmlPath = config('php-unit-dusk-xml', base_path('phpunit.dusk.xml'));
+
+        exec("php {$phpunitPath} -c {$phpunitXmlPath}", $result, $code);
 
         $passing = $code == 0;
 
-        $passingBefore = $this->cache->get('sanity.status.dusk', false);
+        $passingBefore = $this->cache->get('sanity.status.dusk', false) == 'PASSING';
 
         $this->cache->forever('sanity.status.dusk', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\DuskTestsFinished($result, $passing, ($passingBefore == 'PASSING'), $this->deployment));
+        $changed = $passingBefore != $passing;
+
+        if ($passing) {
+            if (!$passingBefore) {
+                $this->cache->forever('sanity.fixer.dusk', $this->deployment);
+            }
+            event(new DuskSucceeded($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+        } else {
+            if ($passingBefore) {
+                $this->cache->forever('sanity.destroyer.dusk', $this->deployment);
+            }
+            event(new DuskFailed($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+        }
+    }
+
+    /**
+     * Update points leaderboard.
+     *
+     * @return void
+     */
+    public function updatePointsLeaderboard()
+    {
+    }
+
+    /**
+     * Get most last known destroyer of tests type.
+     *
+     * @param string $test The type of test requesting destroyer.
+     *
+     * @return array
+     */
+    public function getDestroyer($test)
+    {
+        return $this->cache->get("sanity.destroyer.{$test}", []);
+    }
+
+    /**
+     * Get most last known fixer of tests type.
+     *
+     * @param string $test The type of test requesting fixer.
+     *
+     * @return array
+     */
+    public function getFixer($test)
+    {
+        return $this->cache->get("sanity.fixer.{$test}", []);
     }
 }

@@ -20,9 +20,5 @@ class SanityServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/Config/phpcs.xml' => base_path('phpcs.xml'),
         ], 'config');
-
-        $this->commands([
-          \Sanity\Console\Commands\SanityDusk::class,
-        ]);
     }
 }

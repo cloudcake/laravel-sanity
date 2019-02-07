@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="PSR2">
-  <description>PSR2 Coding Standards and customizations</description>
+  <description>PSR2 coding standards with minor tweaks</description>
   <rule ref="PSR2"/>
   <file>app</file>
   <file>config</file>
@@ -24,8 +24,8 @@
   <rule ref="Generic.Files.LineEndings"/>
   <rule ref="Generic.Files.LineLength">
     <properties>
-      <property name="lineLimit" value="100"/>
-      <property name="absoluteLineLimit" value="120"/>
+      <property name="lineLimit" value="120"/>
+      <property name="absoluteLineLimit" value="135"/>
     </properties>
   </rule>
   <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
@@ -36,14 +36,14 @@
   <rule ref="Generic.Functions.OpeningFunctionBraceBsdAllman"/>
   <rule ref="Generic.Metrics.CyclomaticComplexity">
     <properties>
-      <property name="complexity" value="3"/>
-      <property name="absoluteComplexity" value="4"/>
+      <property name="complexity" value="4"/>
+      <property name="absoluteComplexity" value="7"/>
     </properties>
   </rule>
   <rule ref="Generic.Metrics.NestingLevel">
     <properties>
-      <property name="nestingLevel" value="2"/>
-      <property name="absoluteNestingLevel" value="3"/>
+      <property name="nestingLevel" value="5"/>
+      <property name="absoluteNestingLevel" value="8"/>
     </properties>
   </rule>
   <rule ref="Generic.NamingConventions.ConstructorName"/>
@@ -82,7 +82,6 @@
   <rule ref="Squiz.Commenting.FunctionComment"/>
   <rule ref="Squiz.Commenting.FunctionCommentThrowTag"/>
   <rule ref="Squiz.Commenting.VariableComment"/>
-
   <exclude-pattern>*/database/*</exclude-pattern>
   <exclude-pattern>*/cache/*</exclude-pattern>
   <exclude-pattern>*/*.js</exclude-pattern>
@@ -102,6 +101,4 @@
   <exclude-pattern>*/Exceptions/Handler.php</exclude-pattern>
   <exclude-pattern>*/Http/Kernel.php</exclude-pattern>
   <exclude-pattern>*/Providers/*</exclude-pattern>
-
-  <arg name="colors"/>
 </ruleset>

@@ -7,51 +7,195 @@ use Illuminate\Support\Facades\Log;
 class Subscriber
 {
     /**
-     * Handle coding standards finished event.
+     * Handle the event.
      *
-     * @param \Sanity\Events\StandardsFinished $event
+     * @param \Sanity\Events\StyleSucceeded $e The event being handled.
      *
      * @return void
      */
-    public function onStandardsFinished($event)
+    public function styleSuccess($e)
     {
-        if ($event->passing == true) {
-            Log::info('Coding standards tests are passing.', ['results' => $event->results]);
-        } else {
-            Log::info("Coding standards tests are failing with {$event->results['totals']['errors']} errors.", ['results' => $event->results]);
-        }
+        $this->onStyleSuccess($e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
-     * Handle unit tests finished event.
+     * Handle the event.
      *
-     * @param \Sanity\Events\UnitTestsFinished $event
+     * @param \Sanity\Events\StyleFailed $e The event being handled.
      *
      * @return void
      */
-    public function onUnitTestsFinished($event)
+    public function styleFailure($e)
     {
-        if ($event->passing == true) {
-            Log::info('Unit tests are passing.', ['results' => $event->results]);
-        } else {
-            Log::info('Unit tests are are failing.', ['results' => $event->results]);
-        }
+        $this->onStyleFailure($e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
-     * Handle dusk tests finished event.
+     * Handle the event.
      *
-     * @param \Sanity\Events\DuskTestsFinished $event
+     * @param \Sanity\Events\UnitSucceeded $e The event being handled.
      *
      * @return void
      */
-    public function onDuskTestsFinished($event)
+    public function unitSuccess(\Sanity\Events\UnitSucceeded $e)
     {
-        if ($event->passing == true) {
-            Log::info('Dusk tests are passing.', ['results' => $event->results]);
-        } else {
-            Log::info('Dusk tests are are failing.', ['results' => $event->results]);
-        }
+        $this->onUnitSuccess($e->fixer, $e->destroyer, $e->logs, $e->changed);
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param \Sanity\Events\UnitFailed $e The event being handled.
+     *
+     * @return void
+     */
+    public function unitFailure(\Sanity\Events\UnitFailed $e)
+    {
+        $this->onUnitFailure($e->fixer, $e->destroyer, $e->logs, $e->changed);
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param \Sanity\Events\DuskSucceeded $e The event being handled.
+     *
+     * @return void
+     */
+    public function duskSuccess(\Sanity\Events\DuskSucceeded $e)
+    {
+        $this->onDuskSuccess($e->fixer, $e->destroyer, $e->logs, $e->changed);
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param \Sanity\Events\DuskFailed $e The event being handled.
+     *
+     * @return void
+     */
+    public function duskFailure(\Sanity\Events\DuskFailed $e)
+    {
+        $this->onDuskFailure($e->fixer, $e->destroyer, $e->logs, $e->changed);
+    }
+
+    /**
+     * Handle the Style success event.
+     *
+     * @param array $fixer     The last known successful commiter.
+     * @param array $destroyer The last known destroyer of success.
+     * @param array $logs      The list of output logs from the runner.
+     * @param array $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onStyleSuccess($fixer, $destroyer, $logs, $changed)
+    {
+        Log::info('Style runner succeeded', [
+            'fixer'     => $fixer,
+            'destroyer' => $destroyer,
+            'logs'      => $logs,
+            'changed'   => intval($changed)
+        ]);
+    }
+
+    /**
+     * Handle the Style failure event.
+     *
+     * @param array $fixer     The last known successful commiter.
+     * @param array $destroyer The last known destroyer of success.
+     * @param array $logs      The list of output logs from the runner.
+     * @param array $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onStyleFailure($fixer, $destroyer, $logs, $changed)
+    {
+        Log::info('Style runner failed', [
+            'fixer'     => $fixer,
+            'destroyer' => $destroyer,
+            'logs'      => $logs,
+            'changed'   => intval($changed)
+        ]);
+    }
+
+    /**
+     * Handle the Unit success event.
+     *
+     * @param array $fixer     The last known successful commiter.
+     * @param array $destroyer The last known destroyer of success.
+     * @param array $logs      The list of output logs from the runner.
+     * @param array $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onUnitSuccess($fixer, $destroyer, $logs, $changed)
+    {
+        Log::info('Unit runner succeeded', [
+            'fixer'     => $fixer,
+            'destroyer' => $destroyer,
+            'logs'      => $logs,
+            'changed'   => intval($changed)
+        ]);
+    }
+
+    /**
+     * Handle the Unit failure event.
+     *
+     * @param array $fixer     The last known successful commiter.
+     * @param array $destroyer The last known destroyer of success.
+     * @param array $logs      The list of output logs from the runner.
+     * @param array $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onUnitFailure($fixer, $destroyer, $logs, $changed)
+    {
+        Log::info('Unit runner failed', [
+            'fixer'     => $fixer,
+            'destroyer' => $destroyer,
+            'logs'      => $logs,
+            'changed'   => intval($changed)
+        ]);
+    }
+
+    /**
+     * Handle the Dusk success event.
+     *
+     * @param array $fixer     The last known successful commiter.
+     * @param array $destroyer The last known destroyer of success.
+     * @param array $logs      The list of output logs from the runner.
+     * @param array $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onDuskSuccess($fixer, $destroyer, $logs, $changed)
+    {
+        Log::info('Dusk runner succeeded', [
+            'fixer'     => $fixer,
+            'destroyer' => $destroyer,
+            'logs'      => $logs,
+            'changed'   => intval($changed)
+        ]);
+    }
+
+    /**
+     * Handle the Dusk failure event.
+     *
+     * @param array $fixer     The last known successful commiter.
+     * @param array $destroyer The last known destroyer of success.
+     * @param array $logs      The list of output logs from the runner.
+     * @param array $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onDuskFailure($fixer, $destroyer, $logs, $changed)
+    {
+        Log::info('Dusk runner failed', [
+            'fixer'     => $fixer,
+            'destroyer' => $destroyer,
+            'logs'      => $logs,
+            'changed'   => intval($changed)
+        ]);
     }
 
     /**
@@ -61,10 +205,13 @@ class Subscriber
      */
     public function subscribe($events)
     {
-        $subscribers = config('sanity.subscribers', []);
+        $subscriber = config('sanity.subscriber', get_class());
 
-        foreach ($subscribers as $eventClass => $subscriber) {
-            $events->listen($eventClass, $subscriber);
-        }
+        $events->listen('Sanity\Events\StyleSucceeded', "{$subscriber}@styleSuccess");
+        $events->listen('Sanity\Events\StyleFailed', "{$subscriber}@styleFailure");
+        $events->listen('Sanity\Events\UnitSucceeded', "{$subscriber}@unitSuccess");
+        $events->listen('Sanity\Events\UnitFailed', "{$subscriber}@unitFailure");
+        $events->listen('Sanity\Events\DuskSucceeded', "{$subscriber}@duskSuccess");
+        $events->listen('Sanity\Events\DuskFailed', "{$subscriber}@duskFailure");
     }
 }
