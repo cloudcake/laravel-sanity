@@ -8,7 +8,7 @@
 
 <p align="center">
 <a href="https://travis-ci.org/stephenlake/laravel-sanity"><img src="https://img.shields.io/travis/stephenlake/laravel-sanity/master.svg?style=flat-square" alt=""></a>
-<a href="https://github.styleci.io/repos/169350599"><img src="https://github.styleci.io/repos/169350599/shield?branch=master&style=flat-square" alt=""></a>
+<a href="https://github.styleci.io/repos/169525482"><img src="https://github.styleci.io/repos/169525482/shield?branch=master&style=flat-square" alt=""></a>
 <a href="https://scrutinizer-ci.com/g/stephenlake/laravel-sanity"><img src="https://img.shields.io/scrutinizer/g/stephenlake/laravel-sanity.svg?style=flat-square" alt=""></a>
 <a href="https://packagist.org/packages/stephenlake/laravel-sanity">
 <img src="https://img.shields.io/packagist/dt/stephenlake/laravel-sanity.svg?style=flat-square" alt="">
