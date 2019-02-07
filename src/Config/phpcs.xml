@@ -79,6 +79,9 @@
   <rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
     <exclude-pattern>*.php</exclude-pattern>
   </rule>
+  <rule ref="Squiz.Commenting.FunctionComment"/>
+  <rule ref="Squiz.Commenting.FunctionCommentThrowTag"/>
+  <rule ref="Squiz.Commenting.VariableComment"/>
 
   <exclude-pattern>*/database/*</exclude-pattern>
   <exclude-pattern>*/cache/*</exclude-pattern>
