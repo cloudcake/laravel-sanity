@@ -52,8 +52,8 @@ return [
   */
 
   'runners' => [
-      'tests'  => true,
-      'dusk'   => false,
+      'unit'  => true,
+      'dusk'   => true,
       'style'  => true,
       'points' => true,
   ],

@@ -58,13 +58,13 @@ class Factory
         $this->runPreRunners();
 
         $runners = config('sanity.runners', [
-            'tests'  => true,
-            'dusk'   => false,
+            'unit'  => true,
+            'dusk'   => true,
             'style'  => true,
             'points' => true,
         ]);
 
-        if ($runners['tests'] === true) {
+        if ($runners['unit'] === true) {
             $this->runUnitTests();
         }
 
@@ -136,9 +136,9 @@ class Factory
             $passing = $result['totals']['warnings'] == 0;
         }
 
-        $passingBefore = $this->cache->get('sanity.status.standards', false) == 'PASSING';
+        $passingBefore = $this->cache->get('sanity.status.style', false) == 'PASSING';
 
-        $this->cache->forever('sanity.status.standards', $passing ? 'PASSING' : 'FAILING');
+        $this->cache->forever('sanity.status.style', $passing ? 'PASSING' : 'FAILING');
 
         $changed = $passingBefore != $passing;
 

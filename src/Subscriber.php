@@ -199,6 +199,18 @@ class Subscriber
     }
 
     /**
+     * Get new instance of SlackMessage.
+     *
+     * @param string $webhook Webhook URL to post to.
+     *
+     * @return SlackMessage
+     */
+    public function slack($webhook)
+    {
+        return new SlackMessage($webhook);
+    }
+
+    /**
      * Register the listeners for the subscriber.
      *
      * @param \Illuminate\Events\Dispatcher $events
