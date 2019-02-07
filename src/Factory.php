@@ -241,7 +241,7 @@ class Factory
     {
         return $this->cache->get(
           "sanity.destroyer.{$test}",
-          json_decode(file_get_content(__DIR__.'/Fixtures/foobar.json'), true)
+          json_decode(file_get_contents(__DIR__.'/Fixtures/foobar.json'), true)
         );
     }
 
@@ -256,7 +256,7 @@ class Factory
     {
         return $this->cache->get(
           "sanity.fixer.{$test}",
-          json_decode(file_get_content(__DIR__.'/Fixtures/foobar.json'), true)
+          json_decode(file_get_contents(__DIR__.'/Fixtures/foobar.json'), true)
         );
     }
 }
