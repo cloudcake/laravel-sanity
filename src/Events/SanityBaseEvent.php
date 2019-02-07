@@ -23,6 +23,13 @@ class SanityBaseEvent
     public $passing;
 
     /**
+     * Boolean indicating whether prior test was successful.
+     *
+     * @var bool
+     */
+    public $passingBefore;
+
+    /**
      * Array containing forge payload.
      *
      * @var array
@@ -38,10 +45,11 @@ class SanityBaseEvent
      *
      * @return void
      */
-    public function __construct(array $results, bool $passing, array $deployment)
+    public function __construct(array $results, bool $passing, bool $passingBefore, array $deployment)
     {
         $this->results = $results;
         $this->passing = $passing;
+        $this->passingBefore = $passingBefore;
         $this->deployment = $deployment;
     }
 }

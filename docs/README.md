@@ -143,6 +143,7 @@ And you're done. Now whenever a test is finished, your subscriber will be called
 The `$test` argument passed to each subscriber event contains 3 properties:
 
 - `$test->passing`: is a boolean indicating whether the test is passing or not.
+- `$test->passingBefore`: is a boolean indicated whether the test prior to the current was passing.
 - `$test->results`: is an array containing the lines of output from the test.
 - `$test->deployment`: is an array containing forge deployment payload including commit information.
 

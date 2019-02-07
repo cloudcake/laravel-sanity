@@ -109,9 +109,11 @@ class Factory
 
         $passing = $results['totals']['errors'] == 0;
 
+        $beforePassing = $this->cache->get('sanity.status.standards', false);
+
         $this->cache->forever('sanity.status.standards', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\StandardsFinished($results, $passing, $this->deployment));
+        event(new \Sanity\Events\StandardsFinished($results, $passing, $passingBefore, $this->deployment));
     }
 
     /**
@@ -132,9 +134,11 @@ class Factory
 
         $passing = $code == 0;
 
+        $beforePassing = $this->cache->get('sanity.status.tests', false);
+
         $this->cache->forever('sanity.status.tests', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\UnitTestsFinished($result, $passing, $this->deployment));
+        event(new \Sanity\Events\UnitTestsFinished($result, $passing, $passingBefore, $this->deployment));
     }
 
     /**
@@ -148,8 +152,10 @@ class Factory
 
         $passing = $code == 0;
 
+        $beforePassing = $this->cache->get('sanity.status.dusk', false);
+
         $this->cache->forever('sanity.status.dusk', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\DuskTestsFinished($result, $passing, $this->deployment));
+        event(new \Sanity\Events\DuskTestsFinished($result, $passing, $passingBefore, $this->deployment));
     }
 }
