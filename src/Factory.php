@@ -16,6 +16,13 @@ class Factory
     private $cache;
 
     /**
+     * Deployment payload from Forge.
+     *
+     * @var array
+     */
+    private $deployment;
+
+    /**
      * Create new instance of Badges.
      *
      * @return void
@@ -40,8 +47,10 @@ class Factory
      *
      * @return void
      */
-    public function runRunners()
+    public function runRunners($deployment)
     {
+        $this->deployment = $deployment;
+
         $this->runPreRunners();
 
         $runners = config('sanity.runners', [
@@ -76,7 +85,7 @@ class Factory
             foreach ($preRunners as $runner) {
                 if (class_exists($runner)) {
                     try {
-                        (new $runner())->run();
+                        (new $runner())->run($this->deployment);
                     } catch (\Exception $e) {
                         Log::error("Sanity could not run prerunnger {$runner}: {$e->getMessage()}");
                     }
@@ -102,7 +111,7 @@ class Factory
 
         $this->cache->forever('sanity.status.standards', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\StandardsFinished($results, $passing));
+        event(new \Sanity\Events\StandardsFinished($results, $passing, $this->deployment));
     }
 
     /**
@@ -125,7 +134,7 @@ class Factory
 
         $this->cache->forever('sanity.status.tests', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\UnitTestsFinished($result, $passing));
+        event(new \Sanity\Events\UnitTestsFinished($result, $passing, $this->deployment));
     }
 
     /**
@@ -141,6 +150,6 @@ class Factory
 
         $this->cache->forever('sanity.status.dusk', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\DuskTestsFinished($result, $passing));
+        event(new \Sanity\Events\DuskTestsFinished($result, $passing, $this->deployment));
     }
 }

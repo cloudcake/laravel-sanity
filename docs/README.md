@@ -140,10 +140,38 @@ Open up `config/sanity.php` and replace the subscribers block with:
 And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
 
 ### Subscriber Event Properties
-The `$test` argument passed to each subscriber event contains 2 properties:
+The `$test` argument passed to each subscriber event contains 3 properties:
 
 - `$test->passing`: is a boolean indicating whether the test is passing or not.
 - `$test->results`: is an array containing the lines of output from the test.
+- `$test->deployment`: is an array containing forge deployment payload including commit information.
+
+## Adding pre-runners
+There may be situations where you need to run some setup before the tests commence. You may define pre-runner classes in the config within the `preRunners` block. These classes must be instatiable and contain a public `run` method, example:
+
+Add the `\App\MyExamplePreRunner::class` file to the `preRunners` block in `configs/sanity.php`:
+
+```
+'preRunners' => [
+  \App\MyExamplePreRunner::class,
+],
+```
+
+Create the pre-runner:
+```
+<?php
+
+namespace App;
+
+class MyExamplePreRunner
+{
+    public function run(array $deployment)
+    {
+        // This code will run automatically
+        // before the tests commence
+    }
+}
+```
 
 ## Modifying Standards configuration
 Sanity uses PHP CodeSniffer to inspect and judge your code format based on a set of highly customised rules in accordance to PSR. If you wish, you may edit these rules by modifying the `phpcs.xml` file within your project root (published by Sanity). Within this file you can include and exlcude paths.
@@ -205,7 +233,3 @@ or
 
 ### Custmizing your badge URL's
 Open up `config/sanity.php` and head to the `badges` block. Here you can define the endpoints needed to be hit on your application to retrieve badges.
-
-# TODO
-- Add pre-runners documentation
-- Add forge committer information to events

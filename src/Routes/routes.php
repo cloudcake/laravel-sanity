@@ -1,7 +1,7 @@
 <?php
 
 Route::post(config('sanity.endpoints.forge.webhook', '/sanity/forge'), function () {
-    \Facades\Sanity\Factory::runRunners();
+    \Facades\Sanity\Factory::runRunners(request()->all());
 });
 
 Route::get(config('sanity.routes.tests', '/sanity/badges/tests.svg'), function () {
