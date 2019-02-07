@@ -109,7 +109,7 @@ class Factory
 
         $passing = $results['totals']['errors'] == 0;
 
-        $beforePassing = $this->cache->get('sanity.status.standards', false);
+        $passingBefore = $this->cache->get('sanity.status.standards', false);
 
         $this->cache->forever('sanity.status.standards', $passing ? 'PASSING' : 'FAILING');
 
@@ -134,7 +134,7 @@ class Factory
 
         $passing = $code == 0;
 
-        $beforePassing = $this->cache->get('sanity.status.tests', false);
+        $passingBefore = $this->cache->get('sanity.status.tests', false);
 
         $this->cache->forever('sanity.status.tests', $passing ? 'PASSING' : 'FAILING');
 
@@ -152,7 +152,7 @@ class Factory
 
         $passing = $code == 0;
 
-        $beforePassing = $this->cache->get('sanity.status.dusk', false);
+        $passingBefore = $this->cache->get('sanity.status.dusk', false);
 
         $this->cache->forever('sanity.status.dusk', $passing ? 'PASSING' : 'FAILING');
 
