@@ -3,8 +3,8 @@
 namespace Sanity\Console\Commands;
 
 use Laravel\Dusk\Console\DuskCommand;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\RuntimeException;
+use Symfony\Component\Process\Process;
 
 class SanityDusk extends DuskCommand
 {
@@ -32,11 +32,13 @@ class SanityDusk extends DuskCommand
                 $this->binary(),
                 $this->phpunitArguments($options)
             )))->setTimeout(null);
+
             try {
-                $process->setTty(! $this->option('without-tty'));
+                $process->setTty(!$this->option('without-tty'));
             } catch (RuntimeException $e) {
                 $this->output->writeln('Warning: '.$e->getMessage());
             }
+
             return $process->run(function ($type, $line) {
                 $this->output->write($line);
             });

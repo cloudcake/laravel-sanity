@@ -22,7 +22,7 @@ class SanityServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->commands([
-          \Sanity\Console\Commands\SanityDusk::class
+          \Sanity\Console\Commands\SanityDusk::class,
         ]);
     }
 }
