@@ -146,12 +146,12 @@ class Factory
             if (!$passingBefore) {
                 $this->cache->forever('sanity.fixer.style', $this->deployment);
             }
-            event(new StyleSucceeded($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
+            event(new StyleSucceeded($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
         } else {
             if ($passingBefore) {
                 $this->cache->forever('sanity.destroyer.style', $this->deployment);
             }
-            event(new StyleFailed($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
+            event(new StyleFailed($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
         }
     }
 
@@ -179,12 +179,12 @@ class Factory
             if (!$passingBefore) {
                 $this->cache->forever('sanity.fixer.unit', $this->deployment);
             }
-            event(new UnitSucceeded($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+            event(new UnitSucceeded($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
         } else {
             if ($passingBefore) {
                 $this->cache->forever('sanity.destroyer.unit', $this->deployment);
             }
-            event(new UnitFailed($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+            event(new UnitFailed($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
         }
     }
 
@@ -212,12 +212,12 @@ class Factory
             if (!$passingBefore) {
                 $this->cache->forever('sanity.fixer.dusk', $this->deployment);
             }
-            event(new DuskSucceeded($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+            event(new DuskSucceeded($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
         } else {
             if ($passingBefore) {
                 $this->cache->forever('sanity.destroyer.dusk', $this->deployment);
             }
-            event(new DuskFailed($this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+            event(new DuskFailed($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
         }
     }
 

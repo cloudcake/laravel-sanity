@@ -16,6 +16,13 @@ class BaseEvent
     public $logs;
 
     /**
+     * Array containing information about latest commit and committer.
+     *
+     * @var array
+     */
+    public $committer;
+
+    /**
      * Array containing information about the commit and committer that
      * fixed the last successful test.
      *
@@ -48,8 +55,9 @@ class BaseEvent
      *
      * @return void
      */
-    public function __construct(array $fixer, array $destroyer, array $logs, bool $changed)
+    public function __construct(array $committer, array $fixer, array $destroyer, array $logs, bool $changed)
     {
+        $this->committer = $committer;
         $this->fixer = $fixer;
         $this->destroyer = $destroyer;
         $this->logs = $logs;

@@ -15,7 +15,7 @@ class Subscriber
      */
     public function styleSuccess($e)
     {
-        $this->onStyleSuccess($e->fixer, $e->destroyer, $e->logs, $e->changed);
+        $this->onStyleSuccess($e->comitter, $e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
@@ -27,7 +27,7 @@ class Subscriber
      */
     public function styleFailure($e)
     {
-        $this->onStyleFailure($e->fixer, $e->destroyer, $e->logs, $e->changed);
+        $this->onStyleFailure($e->comitter, $e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
@@ -39,7 +39,7 @@ class Subscriber
      */
     public function unitSuccess(\Sanity\Events\UnitSucceeded $e)
     {
-        $this->onUnitSuccess($e->fixer, $e->destroyer, $e->logs, $e->changed);
+        $this->onUnitSuccess($e->comitter, $e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
@@ -51,7 +51,7 @@ class Subscriber
      */
     public function unitFailure(\Sanity\Events\UnitFailed $e)
     {
-        $this->onUnitFailure($e->fixer, $e->destroyer, $e->logs, $e->changed);
+        $this->onUnitFailure($e->comitter, $e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
@@ -63,7 +63,7 @@ class Subscriber
      */
     public function duskSuccess(\Sanity\Events\DuskSucceeded $e)
     {
-        $this->onDuskSuccess($e->fixer, $e->destroyer, $e->logs, $e->changed);
+        $this->onDuskSuccess($e->comitter, $e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
@@ -75,12 +75,13 @@ class Subscriber
      */
     public function duskFailure(\Sanity\Events\DuskFailed $e)
     {
-        $this->onDuskFailure($e->fixer, $e->destroyer, $e->logs, $e->changed);
+        $this->onDuskFailure($e->comitter, $e->fixer, $e->destroyer, $e->logs, $e->changed);
     }
 
     /**
      * Handle the Style success event.
      *
+     * @param array $comitter  The committer that triggered the build.
      * @param array $fixer     The last known successful commiter.
      * @param array $destroyer The last known destroyer of success.
      * @param array $logs      The list of output logs from the runner.
@@ -88,19 +89,14 @@ class Subscriber
      *
      * @return void
      */
-    protected function onStyleSuccess($fixer, $destroyer, $logs, $changed)
+    protected function onStyleSuccess($comitter, $fixer, $destroyer, $logs, $changed)
     {
-        Log::info('Style runner succeeded', [
-            'fixer'     => $fixer,
-            'destroyer' => $destroyer,
-            'logs'      => $logs,
-            'changed'   => intval($changed)
-        ]);
     }
 
     /**
      * Handle the Style failure event.
      *
+     * @param array $comitter  The committer that triggered the build.
      * @param array $fixer     The last known successful commiter.
      * @param array $destroyer The last known destroyer of success.
      * @param array $logs      The list of output logs from the runner.
@@ -108,19 +104,14 @@ class Subscriber
      *
      * @return void
      */
-    protected function onStyleFailure($fixer, $destroyer, $logs, $changed)
+    protected function onStyleFailure($comitter, $fixer, $destroyer, $logs, $changed)
     {
-        Log::info('Style runner failed', [
-            'fixer'     => $fixer,
-            'destroyer' => $destroyer,
-            'logs'      => $logs,
-            'changed'   => intval($changed)
-        ]);
     }
 
     /**
      * Handle the Unit success event.
      *
+     * @param array $comitter  The committer that triggered the build.
      * @param array $fixer     The last known successful commiter.
      * @param array $destroyer The last known destroyer of success.
      * @param array $logs      The list of output logs from the runner.
@@ -128,19 +119,14 @@ class Subscriber
      *
      * @return void
      */
-    protected function onUnitSuccess($fixer, $destroyer, $logs, $changed)
+    protected function onUnitSuccess($comitter, $fixer, $destroyer, $logs, $changed)
     {
-        Log::info('Unit runner succeeded', [
-            'fixer'     => $fixer,
-            'destroyer' => $destroyer,
-            'logs'      => $logs,
-            'changed'   => intval($changed)
-        ]);
     }
 
     /**
      * Handle the Unit failure event.
      *
+     * @param array $comitter  The committer that triggered the build.
      * @param array $fixer     The last known successful commiter.
      * @param array $destroyer The last known destroyer of success.
      * @param array $logs      The list of output logs from the runner.
@@ -148,19 +134,14 @@ class Subscriber
      *
      * @return void
      */
-    protected function onUnitFailure($fixer, $destroyer, $logs, $changed)
+    protected function onUnitFailure($comitter, $fixer, $destroyer, $logs, $changed)
     {
-        Log::info('Unit runner failed', [
-            'fixer'     => $fixer,
-            'destroyer' => $destroyer,
-            'logs'      => $logs,
-            'changed'   => intval($changed)
-        ]);
     }
 
     /**
      * Handle the Dusk success event.
      *
+     * @param array $comitter  The committer that triggered the build.
      * @param array $fixer     The last known successful commiter.
      * @param array $destroyer The last known destroyer of success.
      * @param array $logs      The list of output logs from the runner.
@@ -168,19 +149,14 @@ class Subscriber
      *
      * @return void
      */
-    protected function onDuskSuccess($fixer, $destroyer, $logs, $changed)
+    protected function onDuskSuccess($comitter, $fixer, $destroyer, $logs, $changed)
     {
-        Log::info('Dusk runner succeeded', [
-            'fixer'     => $fixer,
-            'destroyer' => $destroyer,
-            'logs'      => $logs,
-            'changed'   => intval($changed)
-        ]);
     }
 
     /**
      * Handle the Dusk failure event.
      *
+     * @param array $comitter  The committer that triggered the build.
      * @param array $fixer     The last known successful commiter.
      * @param array $destroyer The last known destroyer of success.
      * @param array $logs      The list of output logs from the runner.
@@ -188,14 +164,8 @@ class Subscriber
      *
      * @return void
      */
-    protected function onDuskFailure($fixer, $destroyer, $logs, $changed)
+    protected function onDuskFailure($committer, $fixer, $destroyer, $logs, $changed)
     {
-        Log::info('Dusk runner failed', [
-            'fixer'     => $fixer,
-            'destroyer' => $destroyer,
-            'logs'      => $logs,
-            'changed'   => intval($changed)
-        ]);
     }
 
     /**
