@@ -51,15 +51,15 @@ class Factory
             'standards' => true,
         ]);
 
-        if ($runners['tests'] == true) {
+        if ($runners['tests'] === true) {
             $this->runUnitTests();
         }
 
-        if ($runners['dusk'] == true) {
+        if ($runners['dusk'] === true) {
             $this->runDuskTests();
         }
 
-        if ($runners['standards'] == true) {
+        if ($runners['standards'] === true) {
             $this->runStandards();
         }
     }
