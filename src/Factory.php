@@ -113,7 +113,7 @@ class Factory
 
         $this->cache->forever('sanity.status.standards', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\StandardsFinished($results, $passing, $passingBefore, $this->deployment));
+        event(new \Sanity\Events\StandardsFinished($results, $passing, ($passingBefore == 'PASSING'), $this->deployment));
     }
 
     /**
@@ -138,7 +138,7 @@ class Factory
 
         $this->cache->forever('sanity.status.tests', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\UnitTestsFinished($result, $passing, $passingBefore, $this->deployment));
+        event(new \Sanity\Events\UnitTestsFinished($result, $passing, ($passingBefore == 'PASSING'), $this->deployment));
     }
 
     /**
@@ -156,6 +156,6 @@ class Factory
 
         $this->cache->forever('sanity.status.dusk', $passing ? 'PASSING' : 'FAILING');
 
-        event(new \Sanity\Events\DuskTestsFinished($result, $passing, $passingBefore, $this->deployment));
+        event(new \Sanity\Events\DuskTestsFinished($result, $passing, ($passingBefore == 'PASSING'), $this->deployment));
     }
 }
