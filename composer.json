@@ -3,7 +3,7 @@
   "description": "Automate builds and code standards sniffing. Now with badges.",
   "keywords": ["automate", "ci", "testing", "badges"],
   "license": "MIT",
-  "type": "project",
+  "type": "library",
   "authors": [{
     "name": "Stephen Lake",
     "email": "stephen@closurecode.com"
