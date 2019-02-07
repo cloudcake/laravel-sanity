@@ -2,10 +2,9 @@
 
 namespace Sanity;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Artisan;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 class Factory
 {
@@ -136,7 +135,7 @@ class Factory
      */
     public function runDuskTests()
     {
-        exec('php ' . base_path('artisan') . ' sanity:dusk --without-tty', $result, $code);
+        exec('php '.base_path('artisan').' sanity:dusk --without-tty', $result, $code);
 
         $passing = $code == 0;
 
