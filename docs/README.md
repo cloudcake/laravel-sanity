@@ -43,7 +43,7 @@ Forge fires a payload to your server whenever it is finished deploying, this URL
 
 Open up the `VerifyCsrfToken` class, by default at `app/Http/Middleware/VerifyCsrfToken` and add the forge webhook route:
 
-```php
+```
 protected $except = [
     '/sanity/forge',
 ];
@@ -51,7 +51,7 @@ protected $except = [
 
 or you can disable with a wildcard:
 
-```php
+```
 protected $except = [
     '/sanity/*',
 ];
@@ -90,7 +90,7 @@ you may do so by creating your own subscriber class and extending `Sanity\Subscr
 
 Create a `SanityEventSubscriber.php` file in `app/` with content:
 
-```php
+```
 <?php
 
 namespace App;
@@ -199,7 +199,7 @@ There may be situations where you need to run some setup before the tests commen
 
 Add the `\App\MyExamplePreRunner::class` file to the `pre-runners` block in `configs/sanity.php`:
 
-```php
+```
 'pre-runners' => [
   \App\MyExamplePreRunner::class,
 ],
@@ -207,7 +207,7 @@ Add the `\App\MyExamplePreRunner::class` file to the `pre-runners` block in `con
 
 Create the pre-runner:
 
-```php
+```
 <?php
 
 namespace App;
@@ -235,7 +235,7 @@ Like pre-runners, you can apply post-runners that run after tests have executed.
 
 Add the `\App\MyExamplePostRunner::class` file to the `post-runners` block in `configs/sanity.php`:
 
-```php
+```
 'post-runners' => [
   \App\MyExamplePostRunner::class,
 ],
@@ -243,7 +243,7 @@ Add the `\App\MyExamplePostRunner::class` file to the `post-runners` block in `c
 
 Create the pre-runner:
 
-```php
+```
 <?php
 
 namespace App;
