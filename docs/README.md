@@ -95,7 +95,9 @@ Create a `SanityEventSubscriber.php` file in `app/` with content:
 
 namespace App;
 
-class SanityEventSubscriber
+use Sanity\Subscriber as SanitySubscriber;
+
+class SanityEventSubscriber extends SanitySubscriber;
 {
     /**
      * Handle the Style success event.
