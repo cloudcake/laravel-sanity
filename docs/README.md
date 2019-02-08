@@ -227,7 +227,7 @@ class MyExamplePreRunner
 }
 ```
 
-## Post-runners
+## Adding post-runners
 Like pre-runners, you can apply post-runners that run after tests have executed.
 
 Add the `\App\MyExamplePostRunner::class` file to the `post-runners` block in `configs/sanity.php`:
