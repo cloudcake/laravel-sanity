@@ -55,7 +55,7 @@ class Badges
     public function style()
     {
         $label = rawurlencode(self::LABEL_STANDARDS);
-        $status = rawurlencode($this->cache->get('sanity.status.standards', self::VALUE_DEFAULT));
+        $status = rawurlencode($this->cache->get('sanity.status.style', self::VALUE_DEFAULT));
         $colour = $this->getColourFor($status);
 
         return $this->respondWithBadge($label, $status, $colour);
