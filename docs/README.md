@@ -76,65 +76,116 @@ Where `example.org` is your applications **staging/testing** domain name and `/s
 Once installation is setup, you can test by triggering a manual deploy on forge. By default when tests are completed Sanity will print to your log file with the status of each test.
 
 ## Listening for results
-The configuration file contains a `subscribers` block which points to a few subscribers located within the Sanity package. These are customizable so that you can handle what happens after a test passes or fails.
+The configuration file contains a `subscribers` field which if undefined points to a default subscriber that listens for events. If you would like your app to listen to these events and fire off your own notifications,
+you may do so by creating your own subscriber class and extending `Sanity\Subscriber`.
 
-The configuration subscribers are are in the format:
+### Example setup:
 
-`Event` => `Subscriber@SubscriberEvent`
+#### Edit the config
 
-Where:
-- `Event` is the event that is fired by Sanity. Do not change this.
-- `Subscriber` is the subscriber class which you can customize.
-- `SubscriberEvent` is the event called on the subscriber which you can customize.
+`subscriber` => `App\SanityEventSubscriber`
 
-### Create your subscriber class
-Create a `MyCustomSubscriber.php` file in `app/Subscribers/` with content:
+
+#### Create your subscriber class
+Create a `SanityEventSubscriber.php` file in `app/` with content:
 
 ```php
 <?php
 
-namespace App\Subscribers;
+namespace App;
 
-class MyCustomSubscriber
+class SanityEventSubscriber
 {
-    public function onStandardsFinished($test)
+    /**
+     * Handle the Style success event.
+     *
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onStyleSuccess($committer, $fixer, $destroyer, $logs, $changed)
     {
-        if ($test->passing == true) {
-           // Handle passing test
-        } else {
-           // Handle failing test
-        }
     }
 
-    public function onUnitTestsFinished($test)
+    /**
+     * Handle the Style failure event.
+     *
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onStyleFailure($committer, $fixer, $destroyer, $logs, $changed)
     {
-        if ($test->passing == true) {
-           // Handle passing test
-        } else {
-           // Handle failing test
-        }
     }
 
-    public function onDuskTestsFinished($test)
+    /**
+     * Handle the Unit success event.
+     *
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onUnitSuccess($committer, $fixer, $destroyer, $logs, $changed)
     {
-        if ($test->passing == true) {
-           // Handle passing test
-        } else {
-           // Handle failing test
-        }
+    }
+
+    /**
+     * Handle the Unit failure event.
+     *
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onUnitFailure($committer, $fixer, $destroyer, $logs, $changed)
+    {
+    }
+
+    /**
+     * Handle the Dusk success event.
+     *
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onDuskSuccess($committer, $fixer, $destroyer, $logs, $changed)
+    {
+    }
+
+    /**
+     * Handle the Dusk failure event.
+     *
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
+     *
+     * @return void
+     */
+    protected function onDuskFailure($committer, $fixer, $destroyer, $logs, $changed)
+    {
     }
 }
-```
-
-### Apply your custom subscriber
-Open up `config/sanity.php` and replace the subscribers block with:
-
-```php
-'subscribers' => [
-  'Sanity\Events\StandardsFinished' => 'App\MyCustomSubscriber@onStandardsFinished',
-  'Sanity\Events\UnitTestsFinished' => 'App\MyCustomSubscriber@onUnitTestsFinished',
-  'Sanity\Events\DuskTestsFinished' => 'App\MyCustomSubscriber@onDuskTestsFinished',
-],
 ```
 
 And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
