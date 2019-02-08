@@ -126,7 +126,7 @@ class Factory
      */
     public function runStyleTests()
     {
-        $phpcsPath = config('phpcsbin', base_path('vendor/bin/phpcs'));
+        $phpcsPath = config('php-cs-bin', base_path('vendor/bin/phpcs'));
 
         $result = json_decode(exec("php {$phpcsPath} --report=json"), true);
 
