@@ -193,7 +193,7 @@ class SanityEventSubscriber extends SanitySubscriber;
 
 And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
 
-# Advanced Usage
+# Extended Usage
 
 ## Adding pre-runners
 
