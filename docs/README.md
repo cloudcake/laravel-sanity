@@ -84,7 +84,7 @@ you may do so by creating your own subscriber class and extending `Sanity\Subscr
 
 #### Edit the config
 
-`subscriber` => `App\SanityEventSubscriber`
+`subscriber` => `App\SanityEventSubscriber::class`
 
 #### Create your subscriber class
 
