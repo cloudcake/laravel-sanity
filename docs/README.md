@@ -323,6 +323,19 @@ Since Sanity makes use of shields.io, any options provided by shields.io are app
 ![badge](https://img.shields.io/badge/tests-failing-c53232.svg?style=for-the-badge)
 ![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=for-the-badge)
 
+`https://staging.example.org/sanity/badges/test.svg?style=popout-square&logo=php&logoColor=white`:
+
+![badge](https://img.shields.io/badge/tests-passing-99cc00.svg?style=popout-square&logo=php&logoColor=white)
+![badge](https://img.shields.io/badge/tests-failing-c53232.svg?style=popout-square&logo=php&logoColor=white)
+![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=popout-square&logo=php&logoColor=white)
+
+`https://staging.example.org/sanity/badges/test.svg?style=for-the-badge&logo=laravel&logoColor=white`:
+
+![badge](https://img.shields.io/badge/tests-passing-99cc00.svg?style=for-the-badge&logo=laravel&logoColor=white)
+![badge](https://img.shields.io/badge/tests-failing-c53232.svg?style=for-the-badge&logo=laravel&logoColor=white)
+![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=for-the-badge&logo=laravel&logoColor=white)
+
+
 `https://staging.example.org/sanity/badges/test.svg?style=social`:
 
 ![badge](https://img.shields.io/badge/dusk-passing-99cc00.svg?style=social)
