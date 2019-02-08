@@ -41,7 +41,7 @@ class SlackMessage
      */
     public function username($username)
     {
-        $this->payload['username']= $username;
+        $this->payload['username'] = $username;
 
         return $this;
     }
@@ -128,7 +128,7 @@ class SlackMessage
         $this->payload['attachments'][0]['fields'][] = [
           'title' => $title,
           'value' => $value,
-          'short' => $short
+          'short' => $short,
         ];
 
         return $this;
