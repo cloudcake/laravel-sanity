@@ -3,12 +3,12 @@
 namespace Sanity;
 
 use Illuminate\Support\Facades\Cache;
-use Sanity\Events\DuskSucceeded;
 use Sanity\Events\DuskFailed;
-use Sanity\Events\StyleSucceeded;
+use Sanity\Events\DuskSucceeded;
 use Sanity\Events\StyleFailed;
-use Sanity\Events\UnitSucceeded;
+use Sanity\Events\StyleSucceeded;
 use Sanity\Events\UnitFailed;
+use Sanity\Events\UnitSucceeded;
 
 class Factory
 {
@@ -58,7 +58,7 @@ class Factory
         $this->runPreRunners();
 
         $runners = config('sanity.runners', [
-            'unit'  => true,
+            'unit'   => true,
             'dusk'   => true,
             'style'  => true,
             'points' => true,
