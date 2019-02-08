@@ -53,6 +53,13 @@ class Factory
      */
     public function runRunners($deployment)
     {
+        $environmentCurrent  = env('APP_ENV', 'production');
+        $environmentsAllowed = config('environments', ['local', 'testing']);
+
+        if (!in_array($environmentCurrent, $environmentsAllowed, true)) {
+            return;
+        }
+
         $this->deployment = $deployment;
 
         $this->runPreRunners();
