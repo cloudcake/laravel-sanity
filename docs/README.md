@@ -317,11 +317,17 @@ Which will produce (dependeing on your status):
 
 Since Sanity makes use of shields.io, any options provided by shields.io are applicable to Sanity's badge generation. Simply append the options to the URL as query parameters, for example, let's assume our application's domain is `staging.example.org` and we're using the default configured badges endpoint of `/sanity/badges/`:
 
-Calling `https://staging.example.org/sanity/badges/test.svg?style=for-the-badge` will produce the following badge:
+`https://staging.example.org/sanity/badges/test.svg?style=for-the-badge`:
 
 ![badge](https://img.shields.io/badge/tests-passing-99cc00.svg?style=for-the-badge)
 ![badge](https://img.shields.io/badge/tests-failing-c53232.svg?style=for-the-badge)
 ![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=for-the-badge)
+
+`https://staging.example.org/sanity/badges/test.svg?style=social`:
+
+![badge](https://img.shields.io/badge/dusk-passing-99cc00.svg?style=social)
+![badge](https://img.shields.io/badge/dusk-failing-c53232.svg?style=social)
+![badge](https://img.shields.io/badge/dusk-not%20running-989898.svg?style=social)
 
 ## Custmizing your badge URL's
 
