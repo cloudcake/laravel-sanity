@@ -46,14 +46,14 @@ return [
   | are called for disabled runners will return as 'not running' or the last
   | known state before the runner was disabled.
   |
-  | Dusk is disabled by default due to it's additional required setup. See
+  | Dusk is disabled by default due to potential additional required setup. See
   | the Sanity documentation.
   |
   */
 
   'runners' => [
-      'unit'  => true,
-      'dusk'   => true,
+      'unit'   => true,
+      'dusk'   => false,
       'style'  => true,
       'points' => true,
   ],
