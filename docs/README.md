@@ -1,5 +1,5 @@
 <h6 align="center">
-    <img src="https://github.com/stephenlake/laravel-sanity/raw/master/docs/assets/laravel-sanity.png" width="450"/>
+    <img src="https://github.com/stephenlake/laravel-sanity/raw/master/docs/assets/laravel-sanity.png-banner"/>
 </h6>
 
 <h6 align="center">
