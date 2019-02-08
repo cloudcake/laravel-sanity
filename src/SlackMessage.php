@@ -35,6 +35,18 @@ class SlackMessage
     }
 
     /**
+     * Set username.
+     *
+     * @return self
+     */
+    public function username($username)
+    {
+        $this->payload['username']= $username;
+
+        return $this;
+    }
+
+    /**
      * Set attachment title.
      *
      * @return self
@@ -117,6 +129,23 @@ class SlackMessage
           'title' => $title,
           'value' => $value,
           'short' => $short
+        ];
+
+        return $this;
+    }
+
+    /**
+     * Add attachment action.
+     *
+     * @return self
+     */
+    public function action($type, $text, $url, $style = '')
+    {
+        $this->payload['attachments'][0]['actions'][] = [
+          'type' => $type,
+          'text' => $text,
+          'url'  => $url,
+          'style'=> $style,
         ];
 
         return $this;
