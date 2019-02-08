@@ -212,12 +212,12 @@ class Factory
             if (!$passingBefore) {
                 $this->cache->forever('sanity.fixer.dusk', $this->deployment);
             }
-            event(new DuskSucceeded($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+            event(new DuskSucceeded($this->deployment, $this->getFixer('dusk'), $this->getDestroyer('unit'), $result, $changed));
         } else {
             if ($passingBefore) {
                 $this->cache->forever('sanity.destroyer.dusk', $this->deployment);
             }
-            event(new DuskFailed($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
+            event(new DuskFailed($this->deployment, $this->getFixer('dusk'), $this->getDestroyer('unit'), $result, $changed));
         }
     }
 
