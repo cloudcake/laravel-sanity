@@ -198,7 +198,7 @@ There may be situations where you need to run some setup before the tests commen
 Add the `\App\MyExamplePreRunner::class` file to the `pre-runners` block in `configs/sanity.php`:
 
 ```php
-'preRunners' => [
+'pre-runners' => [
   \App\MyExamplePreRunner::class,
 ],
 ```
@@ -216,13 +216,48 @@ class MyExamplePreRunner
   /**
    * Run pre-runner before any tests are executed.
    *
-   * @param array   $committer The committer that triggered the build.
+   * @param array $committer The committer that triggered the build.
    *
    * @return mixed
    */
     public function run(array $committer)
     {
         // Pre-runner code
+    }
+}
+```
+
+## Post-runners
+Like pre-runners, you can apply post-runners that run after tests have executed.
+
+Add the `\App\MyExamplePostRunner::class` file to the `post-runners` block in `configs/sanity.php`:
+
+```php
+'post-runners' => [
+  \App\MyExamplePostRunner::class,
+],
+```
+
+Create the pre-runner:
+
+```php
+<?php
+
+namespace App;
+
+class MyExamplePostRunner
+{
+
+  /**
+   * Run post-runner after all tests are executed.
+   *
+   * @param array $committer The committer that triggered the build.
+   *
+   * @return mixed
+   */
+    public function run(array $committer)
+    {
+        // Post-runner code
     }
 }
 ```
