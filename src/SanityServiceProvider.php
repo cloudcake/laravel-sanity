@@ -20,5 +20,11 @@ class SanityServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/Config/phpcs.xml' => base_path('phpcs.xml'),
         ], 'config');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Sanity\Commands\SanityMock::class,
+            ]);
+        }
     }
 }

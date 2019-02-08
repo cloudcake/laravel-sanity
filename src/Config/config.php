@@ -4,6 +4,24 @@ return [
 
   /*
   |--------------------------------------------------------------------------
+  | Allowed Environments
+  |--------------------------------------------------------------------------
+  |
+  | Set the environments Sanity is allowed to run on. While it's possible to
+  | run on production, this is highly discouraged as these tests are only run
+  | after the code is already deployed.
+  |
+  | Since a Laravel Forge payload is required to hit your endpoint to fire off
+  | the tests and you cannot receive it locally unless using a third-party 
+  | software like ngrok, Sanity contains an artisan command to test on your
+  | local environment: php artisan sanity:mock
+  |
+  | Options: local, testing, production
+  */
+  'environments' => ['local', 'testing'],
+
+  /*
+  |--------------------------------------------------------------------------
   | Forge Webhook
   |--------------------------------------------------------------------------
   |
@@ -21,7 +39,7 @@ return [
 
   /*
   |--------------------------------------------------------------------------
-  | Routes
+  | Badge Routes
   |--------------------------------------------------------------------------
   |
   | You can dynamically define your desired routes for each of Sanity's
@@ -30,7 +48,7 @@ return [
   |
   */
 
-  'routes' => [
+  'badges' => [
       'unit'   => '/sanity/badges/unit.svg',
       'dusk'   => '/sanity/badges/dusk.svg',
       'style'  => '/sanity/badges/style.svg',
@@ -89,6 +107,17 @@ return [
   */
 
   'cache' => 'file',
+
+  /*
+  |--------------------------------------------------------------------------
+  | Database
+  |--------------------------------------------------------------------------
+  |
+  | Toggle to enable database storage.
+  |
+  */
+
+  'database' => false,
 
   /*
   |--------------------------------------------------------------------------
