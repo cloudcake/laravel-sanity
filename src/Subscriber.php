@@ -81,11 +81,11 @@ class Subscriber
     /**
      * Handle the Style success event.
      *
-     * @param array $committer The committer that triggered the build.
-     * @param array $fixer     The last known successful commiter.
-     * @param array $destroyer The last known destroyer of success.
-     * @param array $logs      The list of output logs from the runner.
-     * @param array $changed   Indicates whether the result changed from the last run.
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
      *
      * @return void
      */
@@ -96,11 +96,11 @@ class Subscriber
     /**
      * Handle the Style failure event.
      *
-     * @param array $committer The committer that triggered the build.
-     * @param array $fixer     The last known successful commiter.
-     * @param array $destroyer The last known destroyer of success.
-     * @param array $logs      The list of output logs from the runner.
-     * @param array $changed   Indicates whether the result changed from the last run.
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
      *
      * @return void
      */
@@ -111,11 +111,11 @@ class Subscriber
     /**
      * Handle the Unit success event.
      *
-     * @param array $committer The committer that triggered the build.
-     * @param array $fixer     The last known successful commiter.
-     * @param array $destroyer The last known destroyer of success.
-     * @param array $logs      The list of output logs from the runner.
-     * @param array $changed   Indicates whether the result changed from the last run.
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
      *
      * @return void
      */
@@ -126,11 +126,11 @@ class Subscriber
     /**
      * Handle the Unit failure event.
      *
-     * @param array $committer The committer that triggered the build.
-     * @param array $fixer     The last known successful commiter.
-     * @param array $destroyer The last known destroyer of success.
-     * @param array $logs      The list of output logs from the runner.
-     * @param array $changed   Indicates whether the result changed from the last run.
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
      *
      * @return void
      */
@@ -141,11 +141,11 @@ class Subscriber
     /**
      * Handle the Dusk success event.
      *
-     * @param array $committer The committer that triggered the build.
-     * @param array $fixer     The last known successful commiter.
-     * @param array $destroyer The last known destroyer of success.
-     * @param array $logs      The list of output logs from the runner.
-     * @param array $changed   Indicates whether the result changed from the last run.
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
      *
      * @return void
      */
@@ -156,11 +156,11 @@ class Subscriber
     /**
      * Handle the Dusk failure event.
      *
-     * @param array $committer The committer that triggered the build.
-     * @param array $fixer     The last known successful commiter.
-     * @param array $destroyer The last known destroyer of success.
-     * @param array $logs      The list of output logs from the runner.
-     * @param array $changed   Indicates whether the result changed from the last run.
+     * @param array   $committer The committer that triggered the build.
+     * @param array   $fixer     The last known successful commiter.
+     * @param array   $destroyer The last known destroyer of success.
+     * @param array   $logs      The list of output logs from the runner.
+     * @param boolean $changed   Indicates whether the result changed from the last run.
      *
      * @return void
      */
