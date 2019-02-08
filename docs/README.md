@@ -287,7 +287,7 @@ Which will produce (dependeing on your status):
 ![badge](https://img.shields.io/badge/tests-failing-c53232.svg)
 ![badge](https://img.shields.io/badge/tests-not%20running-989898.svg)
 
-### Dusk Tests Badge
+## Dusk Tests Badge
 
 Hit your domain with the configured `badges->dusk` endpoint:
 
