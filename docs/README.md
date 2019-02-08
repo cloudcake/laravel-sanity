@@ -76,6 +76,7 @@ Where `example.org` is your applications **staging/testing** domain name and `/s
 Once installation is setup, you can test by triggering a manual deploy on forge. By default when tests are completed Sanity will print to your log file with the status of each test.
 
 ## Listening for results
+
 The configuration file contains a `subscribers` field which if undefined points to a default subscriber that listens for events. If you would like your app to listen to these events and fire off your own notifications,
 you may do so by creating your own subscriber class and extending `Sanity\Subscriber`.
 
@@ -85,8 +86,8 @@ you may do so by creating your own subscriber class and extending `Sanity\Subscr
 
 `subscriber` => `App\SanityEventSubscriber`
 
-
 #### Create your subscriber class
+
 Create a `SanityEventSubscriber.php` file in `app/` with content:
 
 ```php
@@ -190,50 +191,54 @@ class SanityEventSubscriber
 
 And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
 
-### Subscriber Event Properties
-The `$test` argument passed to each subscriber event contains 3 properties:
-
-- `$test->passing`: is a boolean indicating whether the test is passing or not.
-- `$test->passingBefore`: is a boolean indicated whether the test prior to the current was passing.
-- `$test->results`: is an array containing the lines of output from the test.
-- `$test->deployment`: is an array containing forge deployment payload including commit information.
-
 ## Adding pre-runners
-There may be situations where you need to run some setup before the tests commence. You may define pre-runner classes in the config within the `preRunners` block. These classes must be instatiable and contain a public `run` method, example:
 
-Add the `\App\MyExamplePreRunner::class` file to the `preRunners` block in `configs/sanity.php`:
+There may be situations where you need to run some setup before the tests commence. You may define pre-runner classes in the config within the `pre-runners` block. These classes must be instatiable and contain a public `run` method, example:
 
-```
+Add the `\App\MyExamplePreRunner::class` file to the `pre-runners` block in `configs/sanity.php`:
+
+```php
 'preRunners' => [
   \App\MyExamplePreRunner::class,
 ],
 ```
 
 Create the pre-runner:
-```
+
+```php
 <?php
 
 namespace App;
 
 class MyExamplePreRunner
 {
-    public function run(array $deployment)
+
+  /**
+   * Run pre-runner before any tests are executed.
+   *
+   * @param array   $committer The committer that triggered the build.
+   *
+   * @return mixed
+   */
+    public function run(array $committer)
     {
-        // This code will run automatically
-        // before the tests commence
+        // Pre-runner code
     }
 }
 ```
 
 ## Modifying Standards configuration
+
 Sanity uses PHP CodeSniffer to inspect and judge your code format based on a set of highly customised rules in accordance to PSR. If you wish, you may edit these rules by modifying the `phpcs.xml` file within your project root (published by Sanity). Within this file you can include and exlcude paths.
 
 For information on how to manage and modify the PHP CodeSniffer rules, view the [PHP CodeSniffer documentation](https://github.com/squizlabs/PHP_CodeSniffer/wiki).
 
 ## Badges
+
 Sanity has badges! Thanks to [shields.io](https://shields.io) Sanity creates badges indicating the status of your applications tests. Once a badge is create, it will be cached.
 
 ### Tests Badge
+
 Hit your domain with the configured `badges->tests` endpoint:
 
 Example: `https://staging.example.org/sanity/badges/tests.svg`
@@ -247,6 +252,7 @@ or
 ![badge](https://img.shields.io/badge/tests-not%20running-989898.svg)
 
 ### Dusk Badge
+
 Hit your domain with the configured `badges->dusk` endpoint:
 
 Example: `https://staging.example.org/sanity/badges/dusk.svg`
@@ -260,6 +266,7 @@ or
 ![badge](https://img.shields.io/badge/dusk-not%20running-989898.svg)
 
 ### Standards Badge
+
 Hit your domain with the configured `badges->standards` endpoint:
 
 Example: `https://staging.example.org/sanity/badges/standards.svg`
@@ -273,6 +280,7 @@ or
 ![badge](https://img.shields.io/badge/coding%20standards-not%20running-989898.svg)
 
 ### Customizing your badges
+
 Since Sanity makes use of shields.io, any options provided by shields.io are applicable to Sanity's badge generation. Simply append the options to the URL as query parameters, for example, let's assume our application's domain is `staging.example.org` and we're using the default configured badges endpoint of `/sanity/badges/`:
 
 Calling `https://staging.example.org/sanity/badges/test.svg?style=for-the-badge` will produce the following badge:
@@ -284,4 +292,5 @@ or
 ![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=for-the-badge)
 
 ### Custmizing your badge URL's
+
 Open up `config/sanity.php` and head to the `badges` block. Here you can define the endpoints needed to be hit on your application to retrieve badges.
