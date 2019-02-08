@@ -230,6 +230,7 @@ class MyExamplePreRunner
 ```
 
 ## Adding post-runners
+
 Like pre-runners, you can apply post-runners that run after tests have executed.
 
 Add the `\App\MyExamplePostRunner::class` file to the `post-runners` block in `configs/sanity.php`:
@@ -274,7 +275,7 @@ For information on how to manage and modify the PHP CodeSniffer rules, view the 
 
 Sanity has badges! Thanks to [shields.io](https://shields.io) Sanity creates badges indicating the status of your applications tests. Once a badge is create, it will be cached.
 
-### Unit Tests Badge
+## Unit Tests Badge
 
 Hit your domain with the configured `badges->unit` endpoint:
 
@@ -298,7 +299,7 @@ Which will produce (dependeing on your status):
 ![badge](https://img.shields.io/badge/dusk-failing-c53232.svg)
 ![badge](https://img.shields.io/badge/dusk-not%20running-989898.svg)
 
-### Style/Standards Badge
+## Style/Standards Badge
 
 Hit your domain with the configured `badges->style` endpoint:
 
@@ -310,7 +311,7 @@ Which will produce (dependeing on your status):
 ![badge](https://img.shields.io/badge/coding%20standards-failing-c53232.svg)
 ![badge](https://img.shields.io/badge/coding%20standards-not%20running-989898.svg)
 
-### Customizing your badges
+## Customizing your badges
 
 Since Sanity makes use of shields.io, any options provided by shields.io are applicable to Sanity's badge generation. Simply append the options to the URL as query parameters, for example, let's assume our application's domain is `staging.example.org` and we're using the default configured badges endpoint of `/sanity/badges/`:
 
@@ -320,6 +321,6 @@ Calling `https://staging.example.org/sanity/badges/test.svg?style=for-the-badge`
 ![badge](https://img.shields.io/badge/tests-failing-c53232.svg?style=for-the-badge)
 ![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=for-the-badge)
 
-### Custmizing your badge URL's
+## Custmizing your badge URL's
 
 Open up `config/sanity.php` and head to the `badges` block. Here you can define the endpoints needed to be hit on your application to retrieve badges.
