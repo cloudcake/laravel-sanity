@@ -191,6 +191,8 @@ class SanityEventSubscriber
 
 And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
 
+# Advanced Usage
+
 ## Adding pre-runners
 
 There may be situations where you need to run some setup before the tests commence. You may define pre-runner classes in the config within the `pre-runners` block. These classes must be instatiable and contain a public `run` method, example:
@@ -268,7 +270,7 @@ Sanity uses PHP CodeSniffer to inspect and judge your code format based on a set
 
 For information on how to manage and modify the PHP CodeSniffer rules, view the [PHP CodeSniffer documentation](https://github.com/squizlabs/PHP_CodeSniffer/wiki).
 
-## Badges
+# Badges
 
 Sanity has badges! Thanks to [shields.io](https://shields.io) Sanity creates badges indicating the status of your applications tests. Once a badge is create, it will be cached.
 
