@@ -12,7 +12,7 @@ return [
   | after the code is already deployed.
   |
   | Since a Laravel Forge payload is required to hit your endpoint to fire off
-  | the tests and you cannot receive it locally unless using a third-party 
+  | the tests and you cannot receive it locally unless using a third-party
   | software like ngrok, Sanity contains an artisan command to test on your
   | local environment: php artisan sanity:mock
   |
@@ -22,7 +22,7 @@ return [
 
   /*
   |--------------------------------------------------------------------------
-  | Forge Webhook
+  | Forge Webhook Route Endpoint
   |--------------------------------------------------------------------------
   |
   | You may define your own forge webhook endpoint here. Change this as you
@@ -39,21 +39,19 @@ return [
 
   /*
   |--------------------------------------------------------------------------
-  | Badge Routes
+  | Badge Route Endpoint
   |--------------------------------------------------------------------------
   |
-  | You can dynamically define your desired routes for each of Sanity's
-  | endpoints in the event that there are conflicts or you wish to use
-  | something a little more secretive.
+  | You can define your desired badge endpoint route if the default does not
+  | suit your needs. This is the endpoint that must be hit to produce an image
+  | badge for the given runner.
+  |
+  | If changing the route, you must include the {runner} placeholder which will
+  | identify which badge to fetch.
   |
   */
 
-  'badges' => [
-      'unit'   => '/sanity/badges/unit.svg',
-      'dusk'   => '/sanity/badges/dusk.svg',
-      'style'  => '/sanity/badges/style.svg',
-      'points' => '/sanity/badges/points.svg',
-  ],
+  'badges' => '/sanity/badges/{runner}.svg',
 
   /*
   |--------------------------------------------------------------------------
@@ -64,16 +62,16 @@ return [
   | are called for disabled runners will return as 'not running' or the last
   | known state before the runner was disabled.
   |
-  | Dusk is disabled by default due to potential additional required setup. See
-  | the Sanity documentation.
+  | You may define your own runners here as long as it extends the base Sanity
+  | runner \Sanity\Runners\Runner. See the documentation.
   |
   */
 
   'runners' => [
-      'unit'   => true,
-      'dusk'   => false,
-      'style'  => true,
-      'points' => true,
+      Sanity\Runners\UnitTestRunner::class,
+      Sanity\Runners\DuskTestRunner::class,
+      Sanity\Runners\StyleTestRunner::class,
+      Sanity\Runners\PointsRunner::class,
   ],
 
   /*
@@ -110,17 +108,6 @@ return [
 
   /*
   |--------------------------------------------------------------------------
-  | Database
-  |--------------------------------------------------------------------------
-  |
-  | Toggle to enable database storage.
-  |
-  */
-
-  'database' => false,
-
-  /*
-  |--------------------------------------------------------------------------
   | Pre-runners
   |--------------------------------------------------------------------------
   |
@@ -144,35 +131,5 @@ return [
   */
 
   'post-runners' => [],
-
-  /*
-  |--------------------------------------------------------------------------
-  | Binary & Config Paths
-  |--------------------------------------------------------------------------
-  |
-  | If your PHPUnit and/or PHPCS binaries or config files are not in the
-  | default locations, you must update their paths here.
-  |
-  */
-
-  'php-unit-bin' => base_path('vendor/bin/phpunit'),
-
-  'php-unit-xml' => base_path('phpunit.xml'),
-
-  'php-unit-dusk-xml' => base_path('phpunit.dusk.xml'),
-
-  'php-cs-bin' => base_path('vendor/bin/phpcs'),
-
-  /*
-  |--------------------------------------------------------------------------
-  | Strict Style
-  |--------------------------------------------------------------------------
-  |
-  | If set to true, when a style succeeds with no errors but contains warnings,
-  | mark the test as a failure. Super strict mode.
-  |
-  */
-
-  'strictStyle' => false,
 
 ];

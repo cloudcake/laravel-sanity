@@ -27,6 +27,6 @@ class SanityMock extends Command
     */
     public function handle()
     {
-        \Facades\Sanity\Factory::runRunners([]);
+        \Facades\Sanity\Factory::runRunners();
     }
 }

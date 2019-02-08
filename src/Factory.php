@@ -2,29 +2,16 @@
 
 namespace Sanity;
 
-use Illuminate\Support\Facades\Cache;
-use Sanity\Events\DuskFailed;
-use Sanity\Events\DuskSucceeded;
-use Sanity\Events\StyleFailed;
-use Sanity\Events\StyleSucceeded;
-use Sanity\Events\UnitFailed;
-use Sanity\Events\UnitSucceeded;
+use Illuminate\Support\Str;
 
 class Factory
 {
     /**
-     * Cache instance.
-     *
-     * @var \lluminate\Cache\CacheManager
-     */
-    private $cache;
-
-    /**
-     * Deployment payload from Forge.
+     * Reference to valid runners.
      *
      * @var array
      */
-    private $deployment;
+    private static $runners = [];
 
     /**
      * Create new instance of Badges.
@@ -33,7 +20,7 @@ class Factory
      */
     public function __construct()
     {
-        $this->cache = Cache::store(config('sanity.cache'), 'file');
+        $this->setupRunners();
     }
 
     /**
@@ -47,44 +34,51 @@ class Factory
     }
 
     /**
+     * Get runner badge.
+     *
+     * @return \Illuminate\Routing\ResponseFactory
+     */
+    public static function badge($runnerName, $queryString = '')
+    {
+        $runner = self::$runners[Str::slug($runnerName)] ?? false;
+
+        if ($runner) {
+            return \Facades\Sanity\Badges::get($runner, $queryString);
+        }
+
+        return abort(404);
+    }
+
+    /**
+     * Create instantiations of valid runners.
+     *
+     * @return void
+     */
+    private function setupRunners()
+    {
+        $runners = config('sanity.runners', []);
+
+        foreach ($runners as $runner) {
+            if (is_subclass_of($runner, \Sanity\Runners\Runner::class)) {
+                self::$runners[Str::slug(($instance = new $runner())->getName())] = $instance;
+            }
+        }
+    }
+
+    /**
      * Run all configured tasks.
      *
      * @return void
      */
-    public function runRunners($deployment)
+    public function runRunners($data = null)
     {
-        $environmentCurrent  = env('APP_ENV', 'production');
-        $environmentsAllowed = config('environments', ['local', 'testing']);
+        $this->deployment = $data ?? file_get_contents(__DIR__.'/Fixtures/forge.json');
 
-        if (!in_array($environmentCurrent, $environmentsAllowed, true)) {
-            return;
-        }
-
-        $this->deployment = $deployment;
-
+        $this->checkEnvironment();
         $this->runPreRunners();
 
-        $runners = config('sanity.runners', [
-            'unit'   => true,
-            'dusk'   => true,
-            'style'  => true,
-            'points' => true,
-        ]);
-
-        if ($runners['unit'] === true) {
-            $this->runUnitTests();
-        }
-
-        if ($runners['dusk'] === true) {
-            $this->runDuskTests();
-        }
-
-        if ($runners['style'] === true) {
-            $this->runStyleTests();
-        }
-
-        if ($runners['points'] === true) {
-            $this->updatePointsLeaderboard();
+        foreach (self::$runners as $runner) {
+            $runner->runNow();
         }
 
         $this->runPostRunners();
@@ -127,143 +121,17 @@ class Factory
     }
 
     /**
-     * Run style tests.
+     * Make sure we're running this on an allowed environment.
      *
      * @return void
      */
-    public function runStyleTests()
+    private function checkEnvironment()
     {
-        $phpcsPath = config('php-cs-bin', base_path('vendor/bin/phpcs'));
+        $environmentCurrent  = env('APP_ENV', 'production');
+        $environmentsAllowed = config('environments', ['local', 'testing']);
 
-        $result = json_decode(exec("php {$phpcsPath} --report=json"), true);
-
-        $passing = $result['totals']['errors'] == 0;
-
-        if ($passing && config('sanity.strictStyle')) {
-            $passing = $result['totals']['warnings'] == 0;
+        if (!in_array($environmentCurrent, $environmentsAllowed, true)) {
+            exit;
         }
-
-        $passingBefore = $this->cache->get('sanity.status.style', false) == 'PASSING';
-
-        $this->cache->forever('sanity.status.style', $passing ? 'PASSING' : 'FAILING');
-
-        $changed = $passingBefore != $passing;
-
-        if ($passing) {
-            if (!$passingBefore) {
-                $this->cache->forever('sanity.fixer.style', $this->deployment);
-            }
-            event(new StyleSucceeded($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
-        } else {
-            if ($passingBefore) {
-                $this->cache->forever('sanity.destroyer.style', $this->deployment);
-            }
-            event(new StyleFailed($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $passingBefore != $passing));
-        }
-    }
-
-    /**
-     * Run unit tests.
-     *
-     * @return void
-     */
-    public function runUnitTests()
-    {
-        $phpunitPath = config('php-unit-bin', base_path('vendor/bin/phpunit'));
-        $phpunitXmlPath = config('php-unit-xml', base_path('phpunit.xml'));
-
-        exec("php {$phpunitPath} -c {$phpunitXmlPath}", $result, $code);
-
-        $passing = $code == 0;
-
-        $passingBefore = $this->cache->get('sanity.status.unit', false) == 'PASSING';
-
-        $this->cache->forever('sanity.status.unit', $passing ? 'PASSING' : 'FAILING');
-
-        $changed = $passingBefore != $passing;
-
-        if ($passing) {
-            if (!$passingBefore) {
-                $this->cache->forever('sanity.fixer.unit', $this->deployment);
-            }
-            event(new UnitSucceeded($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
-        } else {
-            if ($passingBefore) {
-                $this->cache->forever('sanity.destroyer.unit', $this->deployment);
-            }
-            event(new UnitFailed($this->deployment, $this->getFixer('unit'), $this->getDestroyer('unit'), $result, $changed));
-        }
-    }
-
-    /**
-     * Run Dusk tests.
-     *
-     * @return void
-     */
-    public function runDuskTests()
-    {
-        $phpunitPath = config('php-unit-bin', base_path('vendor/bin/phpunit'));
-        $phpunitXmlPath = config('php-unit-dusk-xml', base_path('phpunit.dusk.xml'));
-
-        exec("php {$phpunitPath} -c {$phpunitXmlPath}", $result, $code);
-
-        $passing = $code == 0;
-
-        $passingBefore = $this->cache->get('sanity.status.dusk', false) == 'PASSING';
-
-        $this->cache->forever('sanity.status.dusk', $passing ? 'PASSING' : 'FAILING');
-
-        $changed = $passingBefore != $passing;
-
-        if ($passing) {
-            if (!$passingBefore) {
-                $this->cache->forever('sanity.fixer.dusk', $this->deployment);
-            }
-            event(new DuskSucceeded($this->deployment, $this->getFixer('dusk'), $this->getDestroyer('unit'), $result, $changed));
-        } else {
-            if ($passingBefore) {
-                $this->cache->forever('sanity.destroyer.dusk', $this->deployment);
-            }
-            event(new DuskFailed($this->deployment, $this->getFixer('dusk'), $this->getDestroyer('unit'), $result, $changed));
-        }
-    }
-
-    /**
-     * Update points leaderboard.
-     *
-     * @return void
-     */
-    public function updatePointsLeaderboard()
-    {
-    }
-
-    /**
-     * Get most last known destroyer of tests type.
-     *
-     * @param string $test The type of test requesting destroyer.
-     *
-     * @return array
-     */
-    public function getDestroyer($test)
-    {
-        return $this->cache->get(
-          "sanity.destroyer.{$test}",
-          json_decode(file_get_contents(__DIR__.'/Fixtures/foobar.json'), true)
-        );
-    }
-
-    /**
-     * Get most last known fixer of tests type.
-     *
-     * @param string $test The type of test requesting fixer.
-     *
-     * @return array
-     */
-    public function getFixer($test)
-    {
-        return $this->cache->get(
-          "sanity.fixer.{$test}",
-          json_decode(file_get_contents(__DIR__.'/Fixtures/foobar.json'), true)
-        );
     }
 }

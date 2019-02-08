@@ -3,25 +3,18 @@
 namespace Sanity;
 
 use Illuminate\Support\Facades\Cache;
+use Zttp\Zttp;
 
 class Badges
 {
+    const BADGE_URL = 'https://img.shields.io/badge/%s-%s-%s.svg?%s';
+
     /**
      * Cache instance.
      *
      * @var \lluminate\Cache\CacheManager
      */
     private $cache;
-
-    const LABEL_TESTS = 'tests';
-    const LABEL_STANDARDS = 'style';
-    const LABEL_DUSK = 'dusk';
-
-    const VALUE_DEFAULT = 'not running';
-
-    const DEFAULT_COLOUR = '989898';
-    const PASSING_COLOUR = '99cc00';
-    const FAILING_COLOUR = 'c53232';
 
     /**
      * Create new instance of Badges.
@@ -34,82 +27,72 @@ class Badges
     }
 
     /**
-     * Get unit tests badge.
+     * Get badge for runner instance.
      *
-     * @return \Illuminate\Routing\ResponseFactory
+     * @return void
      */
-    public function unit()
+    public function get($runner, $queryString)
     {
-        $label = rawurlencode(self::LABEL_TESTS);
-        $status = rawurlencode($this->cache->get('sanity.status.tests', self::VALUE_DEFAULT));
-        $colour = $this->getColourFor($status);
+        $label  = $runner->getBadgeLabel();
+        $status = $runner->getBadgeStatus();
+        $colour = $runner->getBadgeColour();
 
-        return $this->respondWithBadge($label, $status, $colour);
+        $badge = $this->getBadge($label, $status, $colour, $queryString);
+
+        if ($badge) {
+            return response($badge, 200)->header('Content-Type', 'image/svg+xml');
+        }
+
+        return abort(404);
     }
 
     /**
-     * Get coding styles badge.
-     *
-     * @return \Illuminate\Routing\ResponseFactory
-     */
-    public function style()
-    {
-        $label = rawurlencode(self::LABEL_STANDARDS);
-        $status = rawurlencode($this->cache->get('sanity.status.style', self::VALUE_DEFAULT));
-        $colour = $this->getColourFor($status);
-
-        return $this->respondWithBadge($label, $status, $colour);
-    }
-
-    /**
-     * Get dusk tests badge.
-     *
-     * @return \Illuminate\Routing\ResponseFactory
-     */
-    public function dusk()
-    {
-        $label = rawurlencode(self::LABEL_DUSK);
-        $status = rawurlencode($this->cache->get('sanity.status.dusk', self::VALUE_DEFAULT));
-        $colour = $this->getColourFor($status);
-
-        return $this->respondWithBadge($label, $status, $colour);
-    }
-
-    /**
-     * Get colour of badge background based on status.
-     *
-     * @param string $status
+     * Get badge from cache otherwise create new.
      *
      * @return string
      */
-    private function getColourFor($status)
+    private function getBadge($label, $status, $colour, $queryString)
     {
-        switch ($status) {
-          case 'PASSING':
-            $colour = self::PASSING_COLOUR;
-            break;
+        $keymd = md5($label.$status.$colour.$queryString);
+        $badge = $this->cache->get("sanity.badges.{$keymd}", false);
 
-          case 'FAILING':
-            $colour = self::FAILING_COLOUR;
-            break;
-
-          default:
-            $colour = self::DEFAULT_COLOUR;
-            break;
+        if (!$badge) {
+            $badge = $this->getNewBadge($label, $status, $colour, $queryString);
         }
 
-        return $colour;
+        return $badge;
     }
+
+    /**
+     * Fetch badge from shields.io.
+     *
+     * @return string|boolean
+     */
+    private function getNewBadge($label, $status, $colour, $queryString)
+    {
+        $url = sprintf(self::BADGE_URL, $label, $status, $colour, $queryString);
+
+        $res = Zttp::get($url);
+
+        if ($res->isOk()) {
+            $badge = $res->body();
+            $keymd = md5($label.$status.$colour.$queryString);
+            $this->cache->forever("sanity.badges.{$keymd}", $badge);
+
+            return $badge;
+        }
+
+        return false;
+    }
+
 
     /**
      * Get the actual badge and cache it.
      *
      * @return \Illuminate\Routing\ResponseFactory
      */
-    private function respondWithBadge($label, $status, $colour)
+    private function badgeResponse($label, $status, $colour)
     {
-        $status = strtolower($status);
-
         $opt = request()->getQueryString();
         $url = "https://img.shields.io/badge/{$label}-{$status}-{$colour}.svg?{$opt}";
         $md5 = md5($url);
