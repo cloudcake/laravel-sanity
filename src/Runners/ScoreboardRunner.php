@@ -30,7 +30,7 @@ class ScoreboardRunner extends Runner
      *
      * @var string
      */
-    protected $badgeColourPassing = 'c53232';
+    protected $badgeColourPassing = '99cc00';
 
     /**
      * Indicate whether this runner collects stats.
