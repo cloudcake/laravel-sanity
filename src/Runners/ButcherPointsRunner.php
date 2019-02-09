@@ -44,7 +44,7 @@ class ButcherPointsRunner extends Runner
      *
      * @var int
      */
-    protected $points = -20;
+    protected $points = 20;
 
     /**
      * Runner execution.
@@ -66,7 +66,7 @@ class ButcherPointsRunner extends Runner
 
         foreach ($runners as $runner) {
             if ($runner->wasButchered()) {
-                $results['players'][$player] = ($points += $this->points);
+                $results['players'][$player] = ($points - $this->points);
             }
         }
 
