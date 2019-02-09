@@ -65,7 +65,30 @@ Where `example.org` is your applications **staging/testing** domain name and `/s
 
 # Usage
 
-Once installation is setup, you can test by triggering a manual deploy on forge. By default when tests are completed Sanity will print to your log file with the status of each test.
+## Runners
+
+Runners are individual classes used to perform tests (and other tasks) on your code base and store the result with their state at the time of the latest commit. Runners store information like the committer, the state before and after the committer triggered the runner and whether they broke or fixed your code.
+
+### Prepackaged Runners
+Sanity is packaged with some useful predefined runners out of the box to express its awesomeness.
+
+#### Unit Runner
+The unit runner runs your configured PHPUnit tests.
+
+#### Dusk Runner
+The dusk runner runsyour configured Laravel Dusk tests.
+
+#### Style Runner
+The style runner performs a strict set of PSR (with some customizations) rules to ensure that your code format and documentation is top-notch.
+
+#### Pusher Points Runner
+The pusher points runner tracks the number of pushes (not commits) each contributor has submitted since installing Sanity and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
+
+#### Butcher Points Runner
+The butcher points runner tracks the number of pushes a user has submitted that have broken one or more tests and gives the user a substracted number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
+
+#### Saviour Points Runner
+The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 ## Listening for results
 
@@ -117,31 +140,6 @@ For example, let's assume we have a runner named **UnitTest**, once the UnitTest
     }
 
 And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
-
-## Runners
-
-Runners are individual classes used to perform tests (and other tasks) on your code base and store the result with their state at the time of the latest commit. Runners store information like the committer, the state before and after the committer triggered the runner and whether they broke or fixed your code.
-
-### Prepackaged Runners
-Sanity is packaged with some useful predefined runners out of the box to express its awesomeness.
-
-#### Unit Runner
-The unit runner runs your configured PHPUnit tests.
-
-#### Dusk Runner
-The dusk runner runsyour configured Laravel Dusk tests.
-
-#### Style Runner
-The style runner performs a strict set of PSR (with some customizations) rules to ensure that your code format and documentation is top-notch.
-
-#### Pusher Points Runner
-The pusher points runner tracks the number of pushes (not commits) each contributor has submitted since installing Sanity and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
-
-#### Butcher Points Runner
-The butcher points runner tracks the number of pushes a user has submitted that have broken one or more tests and gives the user a substracted number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
-
-#### Saviour Points Runner
-The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 ### Creating Custom Runners
 To be updated.
