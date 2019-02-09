@@ -188,7 +188,7 @@ class Runner
      */
     public function markAsFailed()
     {
-        if ($this->passing() || $this->hasntRun()) {
+        if ($this->passing()) {
             $this->store['butcher'] = $this->commit;
             $this->store['saved'] = false;
             $this->store['butchered'] = true;
@@ -228,7 +228,7 @@ class Runner
      */
     public function hasntRun()
     {
-        return $this->store['state'] == -1 || is_null($this->store['state']);
+        return $this->store['state'] == -1;
     }
 
     /**
