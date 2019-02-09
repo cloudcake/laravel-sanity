@@ -73,6 +73,7 @@ return [
       Sanity\Runners\PusherPointsRunner::class,
       Sanity\Runners\ButcherPointsRunner::class,
       Sanity\Runners\SaviourPointsRunner::class,
+      Sanity\Runners\ScoreboardRunner::class,
   ],
 
   /*

@@ -366,6 +366,16 @@ class Runner
     }
 
     /**
+     * Return number of points the test adds/substracts.
+     *
+     * @return integer
+     */
+    public function getPoints()
+    {
+        return $this->points;
+    }
+
+    /**
      * Return true if this runner collects stats.
      *
      * @return bool
