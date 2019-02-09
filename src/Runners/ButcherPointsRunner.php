@@ -30,7 +30,7 @@ class ButcherPointsRunner extends Runner
      *
      * @var string
      */
-    protected $badgeColourPassing = 'c53232';
+    protected $badgeColourPassing = '6666FF';
 
     /**
      * Indicate whether this runner collects stats.
@@ -44,7 +44,7 @@ class ButcherPointsRunner extends Runner
      *
      * @var int
      */
-    protected $points = 20;
+    protected $points = 15;
 
     /**
      * Runner execution.
