@@ -70,45 +70,101 @@ Where `example.org` is your applications **staging/testing** domain name and `/s
 Runners are individual classes used to perform tests (and other tasks) on your code base and store the result with their state at the time of the latest commit. Runners store information like the committer, the state before and after the committer triggered the runner and whether they broke or fixed your code.
 
 ### Prepackaged Runners
+
 Sanity is packaged with some useful predefined runners out of the box to express its awesomeness.
 
 #### Unit Runner
+
 [(`\Sanity\Runners\UnitTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/UnitTestRunner.php)
 
 The unit runner runs your configured PHPUnit tests.
 
 #### Dusk Runner
+
 [(`\Sanity\Runners\DuskTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/DuskTestRunner.php)
 
 The dusk runner runs your configured Laravel Dusk tests.
 
 #### Style Runner
+
 [(`\Sanity\Runners\StyleTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/StyleTestRunner.php)
 
 The style runner performs a strict set of PSR (with some customizations) rules to ensure that your code format and documentation is top-notch.
 
 #### Pusher Points Runner
+
 [(`\Sanity\Runners\PusherPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/PusherPointsRunner.php)
 
 The pusher points runner tracks the number of pushes (not commits) each contributor has submitted since installing Sanity and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 #### Butcher Points Runner
+
 [(`\Sanity\Runners\ButcherPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/ButcherPointsRunner.php)
 
 The butcher points runner tracks the number of pushes a user has submitted that have broken one or more tests and gives the user a substracted number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 #### Saviour Points Runner
+
 [(`\Sanity\Runners\SaviourPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/SaviourPointsRunner.php)
 
 The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 ### Creating Custom Runners
+Creating your own runners couldn't be easier. Simply create a class that extends the Sanity base runner, give it a name and provide a run method that ends with telling Sanity whether your runner succeeded or failed. Let's run through an example.
+
+We'll create a runner that tests if the `storage` directory is writable.
+
+#### Create your runner class
+
+```
+<?php
+
+namespace App;
+
+class WritableStorageTestRunner extends \Sanity\Runners\Runner
+{
+    protected $name = 'Writable Storage';
+
+    protected function run() : void
+    {
+        if (is_writable(storage_path())) {
+           $this->markAsPassed();
+        } else {
+           $this->markAsFailed();
+        }
+    }
+}
+```
+
+#### Add your runner to the config
+```
+'runners' => [
+    Sanity\Runners\UnitTestRunner::class,
+    Sanity\Runners\DuskTestRunner::class,
+    Sanity\Runners\StyleTestRunner::class,
+    Sanity\Runners\PusherPointsRunner::class,
+    Sanity\Runners\ButcherPointsRunner::class,
+    Sanity\Runners\SaviourPointsRunner::class,
+    App\WritableStorageTestRunner::class
+],
+```
+
+#### Test your runner
+Sanity comes bundled with a test command (`\Sanity\Commands\SanityMock`) which may be used to simulate a deployment payload from Laravel Forge. Run this command to test your new runner:
+
+`php artisan sanity:mock`
+
+It's that simple. And you magically have a badge to display, check it out by opening your configured badges endpoint, defaults to `http://localhost/sanity/badges/writable-storage.svg`!
+
+### Available Runner Methods
+To be updated.
+
+### Available Attributes Methods
 To be updated.
 
 ## Listening for results
 
-The configuration file contains a `subscriber` field which if undefined points to a default subscriber that listens for events. If you would like your app to listen to these events and fire off your own notifications,
-you may do so by creating your own subscriber class and extending `Sanity\Subscriber`.
+The configuration file contains a `subscriber` field which if undefined points to a default subscriber that listens for events. If you would like your app to listen to these events and fire off your own notifications, you may do so by creating your own subscriber class and extending `Sanity\Subscriber`.
 
 ### Create your subscriber class
 
@@ -127,7 +183,7 @@ Create a `SanityEventSubscriber.php` file in `app/` with content:
 
 ### Create subscriber event handlers
 
-Next we need to setup our subscriber to listen for events. Sanity fires off events based off of the runner name and its state. If the method does not exist on your subscriber, it simply does not fire the event.
+Next we need to setup our subscriber to listen for events. Sanity fires off events based off of the runner name and its state. If the method does not exist on your subscriber, it simply does not fire the event. All runners configured in your configuration file will automatically fire off their events.
 
 For example, let's assume we have a runner named **UnitTest**, once the UnitTest runner has finished with success, Sanity will look for an event named on**UnitTest**Success, or on a failure it will look for an event named on**UnitTest**Failure, so we need to define these event methods:
 
@@ -172,25 +228,25 @@ Add the `\App\MyExamplePreRunner::class` file to the `pre-runners` block in `con
 
 Create the pre-runner:
 
-    <?php
+        <?php
 
-    namespace App;
+        namespace App;
 
-    class MyExamplePreRunner
-    {
-
-      /**
-       * Run pre-runner before any tests are executed.
-       *
-       * @param array $committer The committer that triggered the build.
-       *
-       * @return mixed
-       */
-        public function run(array $committer)
+        class MyExamplePreRunner
         {
-            // Pre-runner code
+
+          /**
+           * Run pre-runner before any tests are executed.
+           *
+           * @param array $committer The committer that triggered the build.
+           *
+           * @return mixed
+           */
+            public function run(array $committer)
+            {
+                // Pre-runner code
+            }
         }
-    }
 
 ## Adding post-runners
 
