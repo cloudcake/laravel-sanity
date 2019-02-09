@@ -110,10 +110,6 @@ To be updated.
 The configuration file contains a `subscriber` field which if undefined points to a default subscriber that listens for events. If you would like your app to listen to these events and fire off your own notifications,
 you may do so by creating your own subscriber class and extending `Sanity\Subscriber`.
 
-### Edit the config
-
-`subscriber` => `App\SanityEventSubscriber::class`
-
 ### Create your subscriber class
 
 Create a `SanityEventSubscriber.php` file in `app/` with content:
@@ -157,6 +153,10 @@ For example, let's assume we have a runner named **UnitTest**, once the UnitTest
 These events should be defined for every runner you have configured in your configuration file.
 
 **Note**: The name of the runner is not necessarily the file name prefix nor class name. You can view the name of each runner by opening their source code and viewing the `protected $name` attribute.
+
+### Update your config
+
+`subscriber` => `App\SanityEventSubscriber::class`
 
 # Extended Usage
 
