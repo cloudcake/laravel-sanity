@@ -163,51 +163,51 @@ It's that simple. And you magically have a badge to display, check it out by ope
 ### Available Attributes Options
 The base Sanity runner class contains a number of proctected attributes to customize your runners. See the complete list below:
 
-#### name
+#### `name`
 `protected $name` `string` default: `Runner`
 A unique name for the runner. Must be changed. Used for mapping runners and must be unique.
 
-#### badgeLabel
+#### `badgeLabel`
 `protected $badgeLabel` `string` default: `Runner`
 
 The label to display on the generated badge.
 
-#### badgeColourPassing
+#### `badgeColourPassing`
 `protected $badgeColourPassing` `string` default: `99cc00`
 
 The colour of the badge to display when the runner is passing. The value should be a hex value **without the leading hash (#)**.
 
-#### badgeColourFailing
+#### `badgeColourFailing`
 `protected $badgeColourFailing` `string` default: `c53232`
 
 The colour of the badge to display when the runner is failing. The value should be a hex value **without the leading hash (#)**.
 
-#### badgeColourUnknown
+#### `badgeColourUnknown`
 `protected $badgeColourUnknown` `string` default: `989898`
 
 The colour of the badge to display when the runner is hasn't been run or is pending. The value should be a hex value **without the leading hash (#)**.
 
-#### badgeValuePassing
+#### `badgeValuePassing`
 `protected $badgeValuePassing` `string` default: `passing`
 
 The text to display when the runner is passing.
 
-#### badgeValueFailing
+#### `badgeValueFailing`
 `protected $badgeValueFailing` `string` default: `failing`
 
 The text to display when the runner is failing.
 
-#### badgeValueUnknown
+#### `badgeValueUnknown`
 `protected $badgeValueUnknown` `string` default: `pending`
 
 The text to display when the runner hasn't run or is pending.
 
-#### shouldFireEvents
+#### `shouldFireEvents`
 `protected $shouldFireEvents` `boolean` default: `true`
 
 Boolean value indicated whether or not the runner should fire success and failure events once it has been run.
 
-#### collectsStats
+#### `collectsStats`
 `protected $collectsStats` `boolean` default: `false`
 
 If set to true, the runner will run after all other runners that are not set to collect stats. This is useful when you need your runner to be executed after everything else has been run in order to collect the results of the other runners.
@@ -223,6 +223,38 @@ Mark the runner as a success.
 #### `markAsFailed()`
 Mark the runner as a failure.
 
+#### `passing()`
+Returns true if the runner has passed.
+
+#### `failing()`
+Returns true if the runner has failed.
+
+#### `hasntRun()`
+Returns true if the runner hasn't run yet.
+
+#### `setResults(array $results)`
+Stores logs in array format for the recorded runner. This is required if you wish to preset logs in your notifications.
+
+#### `getCommit()`
+Get the latest commit information from the push that triggered the runner to execute.
+
+#### `getButcher()`
+Returns the commit array of the push that broke the run.
+
+#### `getSaviour()`
+Returns the commit array of the push that fixed the run.
+
+#### `getResults()`
+Get stored logs from the runner as an array.
+
+#### `wasButchered()`
+Returns true if this runner was previously successful, but currently failing.
+
+#### `wasSaved()`
+Returns true if this runner was previously failing, but currently passing.
+
+#### `collectsStats()`
+Returns true if the runner collects stats.
 
 ## Listening for results
 
