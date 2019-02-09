@@ -369,13 +369,13 @@ The base subscriber is bundled with a little Slack helper to assist in submittin
         {
             if ($runner->wasButchered()) {
               slack(self::MY_SLACK_WEHBOOK_URL)
-                 ->success()
+                 ->danger()
                  ->title("{$pusher} broke the tests!")
                  ->text("{$pusher} committed and broke a passing test!")
                  ->send();
             } else {
               slack(self::MY_SLACK_WEHBOOK_URL)
-                 ->success()
+                 ->danger()
                  ->title("The tests are still broken!")
                  ->text("{$pusher} committed without fixing the test!")
                  ->send();
