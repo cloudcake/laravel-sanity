@@ -165,6 +165,7 @@ The base Sanity runner class contains a number of proctected attributes to custo
 
 #### `name`
 `protected $name` `string` default: `Runner`
+
 A unique name for the runner. Must be changed. Used for mapping runners and must be unique.
 
 #### `badgeLabel`
@@ -213,10 +214,9 @@ Boolean value indicated whether or not the runner should fire success and failur
 If set to true, the runner will run after all other runners that are not set to collect stats. This is useful when you need your runner to be executed after everything else has been run in order to collect the results of the other runners.
 
 ### Available Runner Methods
-The base Sanity runner class contains a number of proctected methods to customize your runners. See the complete list below:
+Runners' helper methods:
 
 #### `markAsPassed()`
-`public function markAsPassed`
 
 Mark the runner as a success.
 
