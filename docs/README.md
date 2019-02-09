@@ -110,48 +110,47 @@ The butcher points runner tracks the number of pushes a user has submitted that 
 The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 ### Creating Custom Runners
+
 Creating your own runners couldn't be easier. Simply create a class that extends the Sanity base runner, give it a name and provide a run method that ends with telling Sanity whether your runner succeeded or failed. Let's run through an example.
 
 We'll create a runner that tests if the `storage` directory is writable.
 
 #### Create your runner class
 
-```
-<?php
+    <?php
 
-namespace App;
+    namespace App;
 
-class WritableStorageTestRunner extends \Sanity\Runners\Runner
-{
-    protected $name = 'Writable Storage';
-
-    protected $badgeLabel = 'Storage Test';
-
-    protected function run() : void
+    class WritableStorageTestRunner extends \Sanity\Runners\Runner
     {
-        if (is_writable(storage_path())) {
-           $this->markAsPassed();
-        } else {
-           $this->markAsFailed();
+        protected $name = 'Writable Storage';
+
+        protected $badgeLabel = 'Storage Test';
+
+        protected function run() : void
+        {
+            if (is_writable(storage_path())) {
+               $this->markAsPassed();
+            } else {
+               $this->markAsFailed();
+            }
         }
     }
-}
-```
 
 #### Add your runner to the config
-```
-'runners' => [
-    Sanity\Runners\UnitTestRunner::class,
-    Sanity\Runners\DuskTestRunner::class,
-    Sanity\Runners\StyleTestRunner::class,
-    Sanity\Runners\PusherPointsRunner::class,
-    Sanity\Runners\ButcherPointsRunner::class,
-    Sanity\Runners\SaviourPointsRunner::class,
-    App\WritableStorageTestRunner::class
-],
-```
+
+    'runners' => [
+        Sanity\Runners\UnitTestRunner::class,
+        Sanity\Runners\DuskTestRunner::class,
+        Sanity\Runners\StyleTestRunner::class,
+        Sanity\Runners\PusherPointsRunner::class,
+        Sanity\Runners\ButcherPointsRunner::class,
+        Sanity\Runners\SaviourPointsRunner::class,
+        App\WritableStorageTestRunner::class
+    ],
 
 #### Test your runner
+
 Sanity comes bundled with a test command (`\Sanity\Commands\SanityMock`) which may be used to simulate a deployment payload from Laravel Forge. Run this command to test your new runner:
 
 `php artisan sanity:mock`
@@ -161,59 +160,71 @@ It's that simple. And you magically have a badge to display, check it out by ope
 ![badge](https://img.shields.io/badge/Storage%20Test-passing-99cc00.svg)
 
 ### Available Attributes Options
+
 The base Sanity runner class contains a number of proctected attributes to customize your runners. See the complete list below:
 
 #### `name`
+
 `protected $name` `string` default: `Runner`
 
 A unique name for the runner. Must be changed. Used for mapping runners and must be unique.
 
 #### `badgeLabel`
+
 `protected $badgeLabel` `string` default: `Runner`
 
 The label to display on the generated badge.
 
 #### `badgeColourPassing`
+
 `protected $badgeColourPassing` `string` default: `99cc00`
 
 The colour of the badge when passing. The value should be a hex value **without the leading hash (#)**.
 
 #### `badgeColourFailing`
+
 `protected $badgeColourFailing` `string` default: `c53232`
 
 The colour of the badge when failing. The value should be a hex value **without the leading hash (#)**.
 
 #### `badgeColourUnknown`
+
 `protected $badgeColourUnknown` `string` default: `989898`
 
 The colour of the badge when pending. The value should be a hex value **without the leading hash (#)**.
 
 #### `badgeValuePassing`
+
 `protected $badgeValuePassing` `string` default: `passing`
 
 The text to display when the runner is passing.
 
 #### `badgeValueFailing`
+
 `protected $badgeValueFailing` `string` default: `failing`
 
 The text to display when the runner is failing.
 
 #### `badgeValueUnknown`
+
 `protected $badgeValueUnknown` `string` default: `pending`
 
 The text to display when the runner hasn't run or is pending.
 
 #### `shouldFireEvents`
+
 `protected $shouldFireEvents` `boolean` default: `true`
 
 Boolean value indicated whether or not the runner should fire success and failure events once it has been run.
 
 #### `collectsStats`
+
 `protected $collectsStats` `boolean` default: `false`
 
 If set to true, the runner will run after all other runners that are not set to collect stats. This is useful when you need your runner to be executed after everything else has been run in order to collect the results of the other runners.
 
 ### Available Runner Methods
+
 Runners' helper methods:
 
 #### `markAsPassed()`
@@ -221,39 +232,51 @@ Runners' helper methods:
 Mark the runner as a success.
 
 #### `markAsFailed()`
+
 Mark the runner as a failure.
 
 #### `passing()`
+
 Returns true if the runner has passed.
 
 #### `failing()`
+
 Returns true if the runner has failed.
 
 #### `hasntRun()`
+
 Returns true if the runner hasn't run yet.
 
 #### `setResults(array $results)`
+
 Stores logs in array format for the recorded runner. This is required if you wish to preset logs in your notifications.
 
 #### `getCommit()`
+
 Get the latest commit information from the push that triggered the runner to execute.
 
 #### `getButcher()`
+
 Returns the commit array of the push that broke the run.
 
 #### `getSaviour()`
+
 Returns the commit array of the push that fixed the run.
 
 #### `getResults()`
+
 Get stored logs from the runner as an array.
 
 #### `wasButchered()`
+
 Returns true if this runner was previously successful, but currently failing.
 
 #### `wasSaved()`
+
 Returns true if this runner was previously failing, but currently passing.
 
 #### `collectsStats()`
+
 Returns true if the runner collects stats.
 
 ## Listening for results
@@ -307,6 +330,58 @@ These events should be defined for every runner you have configured in your conf
 ### Update your config
 
 `subscriber` => `App\SanityEventSubscriber::class`
+
+## Slack notifications
+
+The base subscriber is bundled with a little Slack helper to assist in submitting Slack notifications via webhook URL.
+
+    <?php
+
+    namespace App;
+
+    use Sanity\Subscriber as SanitySubscriber;
+
+    class SanityEventSubscriber extends SanitySubscriber;
+    {
+        const MY_SLACK_WEHBOOK_URL = 'https://hooks.slack.com/services/T00000/B0000/XXXXXXXXXXX';
+
+        public function onMyRunnerSuccess($runner)
+        {
+           $commit = $runner->getCommit();
+           $pusher = $commit['commit_author'];
+
+           if ($runner->wasSaved()) {
+             slack(self::MY_SLACK_WEHBOOK_URL)
+                ->success()
+                ->title("{$pusher} fixed the tests!")
+                ->text("{$pusher} committed and fixed broken tests!")
+                ->send();
+           } else {
+             slack(self::MY_SLACK_WEHBOOK_URL)
+                ->success()
+                ->title("The tests are still passing!")
+                ->text("{$pusher} committed without breaking the test!")
+                ->send();
+           }
+        }
+
+        public function onMyRunnerFailure($runner)
+        {
+            if ($runner->wasButchered()) {
+              slack(self::MY_SLACK_WEHBOOK_URL)
+                 ->success()
+                 ->title("{$pusher} broke the tests!")
+                 ->text("{$pusher} committed and broke a passing test!")
+                 ->send();
+            } else {
+              slack(self::MY_SLACK_WEHBOOK_URL)
+                 ->success()
+                 ->title("The tests are still broken!")
+                 ->text("{$pusher} committed without fixing the test!")
+                 ->send();
+            }
+        }
+    }
 
 # Extended Usage
 
@@ -385,6 +460,7 @@ For information on how to manage and modify the PHP CodeSniffer rules, view the 
 Sanity has badges! Thanks to [shields.io](https://shields.io) Sanity creates badges indicating the status of your applications tests. Once a badge is created, it will be cached.
 
 ## Viewing your runner badges
+
 Badges are automatically created for every runner and may be viewed by calling the sluggified `$name` attribute on the runner, for example:
 
 If your runner's configured name is `Green Apple Tree`, then the name to call in the badges URL will be:
