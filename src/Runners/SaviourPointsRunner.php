@@ -2,21 +2,21 @@
 
 namespace Sanity\Runners;
 
-class ButcherPointsRunner extends Runner
+class SaviourPointsRunner extends Runner
 {
     /**
      * Identifier for the runner.
      *
      * @var string
      */
-    protected $name = 'Butchers';
+    protected $name = 'Saviours';
 
     /**
      * Label to display for the badge.
      *
      * @var string
      */
-    protected $badgeLabel = 'Top Butchers';
+    protected $badgeLabel = 'Top Saviours';
 
     /**
      * Indicate whether or not this runner should fire events.
@@ -30,7 +30,7 @@ class ButcherPointsRunner extends Runner
      *
      * @var string
      */
-    protected $badgeColourPassing = 'c53232';
+    protected $badgeColourPassing = '99cc00';
 
     /**
      * Indicate whether this runner collects stats.
@@ -44,7 +44,7 @@ class ButcherPointsRunner extends Runner
      *
      * @var integer
      */
-    protected $points = -20;
+    protected $points = 10;
 
     /**
      * Runner execution.
@@ -65,7 +65,7 @@ class ButcherPointsRunner extends Runner
         $points = $results['players'][$player] ?? 0;
 
         foreach ($runners as $runner) {
-            if ($runner->wasButchered()) {
+            if ($runner->wasSaved()) {
                 $results['players'][$player] = ($points += $this->points);
             }
         }
@@ -73,18 +73,18 @@ class ButcherPointsRunner extends Runner
         $results['status'] = 'none';
 
         if (count($results['players'])) {
-            $butchers = collect($results['players'])->sortByDesc(function ($value, $key) {
+            $saviours = collect($results['players'])->sortByDesc(function ($value, $key) {
                 return $value;
             })->all();
 
-            $butchers = array_slice($results['players'], 0, 3);
-            $butchersTmp = [];
+            $saviours = array_slice($results['players'], 0, 3);
+            $savioursTmp = [];
 
-            foreach ($butchers as $butcher => $points) {
-                $butchersTmp[] = $butcher.' ('.number_format($points).')';
+            foreach ($saviours as $saviour => $points) {
+                $savioursTmp[] = $saviour.' ('.number_format($points).')';
             }
 
-            $results['status'] = str_replace('-', '--', implode(', ', $butchersTmp));
+            $results['status'] = str_replace('-', '--', implode(', ', $savioursTmp));
         }
 
         $this->setResults($results);
