@@ -17,6 +17,8 @@ class Subscriber
         $runnerState  = $runnerClass->passing() ? 'Success' : 'Failure';
         $runnerMethod = "on{$runnerClass->getName()}{$runnerState}";
 
+        echo 'hear event';
+        
         if (method_exists($this, $runnerMethod)) {
             $this->$runnerMethod($runner);
         }

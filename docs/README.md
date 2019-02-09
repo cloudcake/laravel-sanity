@@ -18,19 +18,15 @@ This package makes use of Laravel's auto-discovery. If you are an using earlier 
 
 Add `Sanity\SanityServiceProvider::class` to the `providers` array in `config/app.php`.
 
-### Event service provider
-
-For event subscribing, add `Sanity\SanityEventServiceProvider::class` to the `providers` array in `config/app.php`.
-
 ## Publish configuration
 
 `php artisan vendor:publish --provider="Sanity\SanityServiceProvider" --tag="config"`
 
-This will publish `sanity.php` to your `config/` path and a `phpcs.xml` config for PHPCS in your base application path.
+This will publish `sanity.php` to your `config/` path and a `phpcs.xml` config in your base app path.
 
 ## Install Sanity's Routes
 
-Generally packages would load their routes automatically, however Sanity allows you to customise your routes in your `config/sanity.php` config and protected them with groupings.
+Generally packages would load their routes automatically, however Sanity allows you to customise your routes in your `config/sanity.php` config and wrap them in groups if you like.
 
 Open up your routes file (default: `routes/web.php`) and add:
 `\Sanity\Factory::routes();`
@@ -41,21 +37,17 @@ This will load the configured routes (in `config/sanity.php`).
 
 Forge fires a payload to your server whenever it is finished deploying, this URL needs to be accessible to forge and we therefore need to disable CSRF token verification for this specific route.
 
-Open up the `VerifyCsrfToken` class, by default at `app/Http/Middleware/VerifyCsrfToken` and add the forge webhook route:
+Open up the `VerifyCsrfToken` class (default at `app/Http/Middleware/VerifyCsrfToken.php`) and add the forge webhook route:
 
-```
-protected $except = [
-    '/sanity/forge',
-];
-```
+    protected $except = [
+        '/sanity/forge',
+    ];
 
 or you can disable with a wildcard:
 
-```
-protected $except = [
-    '/sanity/*',
-];
-```
+    protected $except = [
+        '/sanity/*',
+    ];
 
 ## Configure Laravel Forge
 
@@ -77,121 +69,82 @@ Once installation is setup, you can test by triggering a manual deploy on forge.
 
 ## Listening for results
 
-The configuration file contains a `subscribers` field which if undefined points to a default subscriber that listens for events. If you would like your app to listen to these events and fire off your own notifications,
+The configuration file contains a `subscriber` field which if undefined points to a default subscriber that listens for events. If you would like your app to listen to these events and fire off your own notifications,
 you may do so by creating your own subscriber class and extending `Sanity\Subscriber`.
 
-### Example setup:
-
-#### Edit the config
+### Edit the config
 
 `subscriber` => `App\SanityEventSubscriber::class`
 
-#### Create your subscriber class
+### Create your subscriber class
 
 Create a `SanityEventSubscriber.php` file in `app/` with content:
 
-```
-<?php
+    <?php
 
-namespace App;
+    namespace App;
 
-use Sanity\Subscriber as SanitySubscriber;
+    use Sanity\Subscriber as SanitySubscriber;
 
-class SanityEventSubscriber extends SanitySubscriber;
-{
-    /**
-     * Handle the Style success event.
-     *
-     * @param array   $committer The committer that triggered the build.
-     * @param array   $fixer     The last known successful commiter.
-     * @param array   $destroyer The last known destroyer of success.
-     * @param array   $logs      The list of output logs from the runner.
-     * @param boolean $changed   Indicates whether the result changed from the last run.
-     *
-     * @return void
-     */
-    protected function onStyleSuccess($committer, $fixer, $destroyer, $logs, $changed)
+    class SanityEventSubscriber extends SanitySubscriber;
     {
+        // Listeners discussed in the next section
     }
 
-    /**
-     * Handle the Style failure event.
-     *
-     * @param array   $committer The committer that triggered the build.
-     * @param array   $fixer     The last known successful commiter.
-     * @param array   $destroyer The last known destroyer of success.
-     * @param array   $logs      The list of output logs from the runner.
-     * @param boolean $changed   Indicates whether the result changed from the last run.
-     *
-     * @return void
-     */
-    protected function onStyleFailure($committer, $fixer, $destroyer, $logs, $changed)
-    {
-    }
+### Create subscriber event handlers
 
-    /**
-     * Handle the Unit success event.
-     *
-     * @param array   $committer The committer that triggered the build.
-     * @param array   $fixer     The last known successful commiter.
-     * @param array   $destroyer The last known destroyer of success.
-     * @param array   $logs      The list of output logs from the runner.
-     * @param boolean $changed   Indicates whether the result changed from the last run.
-     *
-     * @return void
-     */
-    protected function onUnitSuccess($committer, $fixer, $destroyer, $logs, $changed)
-    {
-    }
+Next we need to setup our subscriber to listen for events. Sanity fires off events based off of the runner (test) name and its state (`success` or `failure`). If the method does not exist on your subscriber, it simply does not fire the event.
 
-    /**
-     * Handle the Unit failure event.
-     *
-     * @param array   $committer The committer that triggered the build.
-     * @param array   $fixer     The last known successful commiter.
-     * @param array   $destroyer The last known destroyer of success.
-     * @param array   $logs      The list of output logs from the runner.
-     * @param boolean $changed   Indicates whether the result changed from the last run.
-     *
-     * @return void
-     */
-    protected function onUnitFailure($committer, $fixer, $destroyer, $logs, $changed)
-    {
-    }
+For example, let's assume we have a runner named **UnitTest**, once the UnitTest runner has completed with success, Sanity will look for an event named on**UnitTest**Success, or for a failure it will look for an event named on**UnitTest**Failure, so we need to define these event methods:
 
-    /**
-     * Handle the Dusk success event.
-     *
-     * @param array   $committer The committer that triggered the build.
-     * @param array   $fixer     The last known successful commiter.
-     * @param array   $destroyer The last known destroyer of success.
-     * @param array   $logs      The list of output logs from the runner.
-     * @param boolean $changed   Indicates whether the result changed from the last run.
-     *
-     * @return void
-     */
-    protected function onDuskSuccess($committer, $fixer, $destroyer, $logs, $changed)
-    {
-    }
+    <?php
 
-    /**
-     * Handle the Dusk failure event.
-     *
-     * @param array   $committer The committer that triggered the build.
-     * @param array   $fixer     The last known successful commiter.
-     * @param array   $destroyer The last known destroyer of success.
-     * @param array   $logs      The list of output logs from the runner.
-     * @param boolean $changed   Indicates whether the result changed from the last run.
-     *
-     * @return void
-     */
-    protected function onDuskFailure($committer, $fixer, $destroyer, $logs, $changed)
+    namespace App;
+
+    use Sanity\Subscriber as SanitySubscriber;
+
+    class SanityEventSubscriber extends SanitySubscriber;
     {
+        public function onUnitTestSuccess($runner)
+        {
+           // Handle successful runner
+        }
+
+        public function onUnitTestFailure($runner)
+        {
+           // Handle failed runner
+        }
     }
-}
-```
 
 And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
+
+## Runners
+
+Runners are individual classes used to perform tests (and other tasks) on your code base and store the result with their state at the time of the latest commit. Runners store information like the committer, the state before and after the committer triggered the runner and whether they broke or fixed your code.
+
+### Prepackaged Runners
+Sanity is packaged with some useful predefined runners out of the box to express its awesomeness.
+
+#### Unit Runner
+The unit runner runs your configured PHPUnit tests.
+
+#### Dusk Runner
+The dusk runner runsyour configured Laravel Dusk tests.
+
+#### Style Runner
+The style runner performs a strict set of PSR (with some customizations) rules to ensure that your code format and documentation is top-notch.
+
+#### Pusher Points Runner
+The pusher points runner tracks the number of pushes (not commits) each contributor has submitted since installing Sanity and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
+
+#### Butcher Points Runner
+The butcher points runner tracks the number of pushes a user has submitted that have broken one or more tests and gives the user a substracted number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
+
+#### Saviour Points Runner
+The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
+
+### Creating Custom Runners
+To be updated.
 
 # Extended Usage
 
@@ -201,35 +154,31 @@ There may be situations where you need to run some setup before the tests commen
 
 Add the `\App\MyExamplePreRunner::class` file to the `pre-runners` block in `configs/sanity.php`:
 
-```
-'pre-runners' => [
-  \App\MyExamplePreRunner::class,
-],
-```
+    'pre-runners' => [
+      \App\MyExamplePreRunner::class,
+    ],
 
 Create the pre-runner:
 
-```
-<?php
+    <?php
 
-namespace App;
+    namespace App;
 
-class MyExamplePreRunner
-{
-
-  /**
-   * Run pre-runner before any tests are executed.
-   *
-   * @param array $committer The committer that triggered the build.
-   *
-   * @return mixed
-   */
-    public function run(array $committer)
+    class MyExamplePreRunner
     {
-        // Pre-runner code
+
+      /**
+       * Run pre-runner before any tests are executed.
+       *
+       * @param array $committer The committer that triggered the build.
+       *
+       * @return mixed
+       */
+        public function run(array $committer)
+        {
+            // Pre-runner code
+        }
     }
-}
-```
 
 ## Adding post-runners
 
@@ -237,35 +186,31 @@ Like pre-runners, you can apply post-runners that run after tests have executed.
 
 Add the `\App\MyExamplePostRunner::class` file to the `post-runners` block in `configs/sanity.php`:
 
-```
-'post-runners' => [
-  \App\MyExamplePostRunner::class,
-],
-```
+    'post-runners' => [
+      \App\MyExamplePostRunner::class,
+    ],
 
 Create the pre-runner:
 
-```
-<?php
+    <?php
 
-namespace App;
+    namespace App;
 
-class MyExamplePostRunner
-{
-
-  /**
-   * Run post-runner after all tests are executed.
-   *
-   * @param array $committer The committer that triggered the build.
-   *
-   * @return mixed
-   */
-    public function run(array $committer)
+    class MyExamplePostRunner
     {
-        // Post-runner code
+
+      /**
+       * Run post-runner after all tests are executed.
+       *
+       * @param array $committer The committer that triggered the build.
+       *
+       * @return mixed
+       */
+        public function run(array $committer)
+        {
+            // Post-runner code
+        }
     }
-}
-```
 
 ## Modifying Code Sniffer Rules
 
@@ -334,7 +279,6 @@ Since Sanity makes use of shields.io, any options provided by shields.io are app
 ![badge](https://img.shields.io/badge/tests-passing-99cc00.svg?style=for-the-badge&logo=laravel&logoColor=white)
 ![badge](https://img.shields.io/badge/tests-failing-c53232.svg?style=for-the-badge&logo=laravel&logoColor=white)
 ![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=for-the-badge&logo=laravel&logoColor=white)
-
 
 `https://staging.example.org/sanity/badges/test.svg?style=social`:
 

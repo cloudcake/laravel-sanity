@@ -36,7 +36,7 @@ class StyleTestRunner extends Runner
 
         $results = json_decode(exec("php {$phpcsPath} --report=json"), true);
 
-        $this->setResults($results);
+        $this->setResults($results ?? []);
 
         ($results['totals']['errors'] == 0) ? $this->markAsPassed() : $this->markAsFailed();
     }

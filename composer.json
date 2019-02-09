@@ -30,7 +30,6 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Sanity\\SanityEventServiceProvider",
         "Sanity\\SanityServiceProvider"
       ]
     }

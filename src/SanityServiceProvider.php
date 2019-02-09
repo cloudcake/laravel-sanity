@@ -2,10 +2,19 @@
 
 namespace Sanity;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 
-class SanityServiceProvider extends ServiceProvider
+class SanityServiceProvider extends EventServiceProvider
 {
+    /**
+     * The subscriber classes to register.
+     *
+     * @var array
+     */
+    protected $subscribe = [
+        \Sanity\Subscriber::class,
+    ];
+
     /**
      * Boot up the Sanity package.
      *

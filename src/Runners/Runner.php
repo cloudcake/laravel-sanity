@@ -132,12 +132,12 @@ class Runner
     {
         $this->commit = $commit;
 
-        //try {
+        try {
             $this->run();
-        // } catch (\Exception $e) {
-        //     $this->markAsFailed();
-        //     $this->setResults([$e->getMessage()]);
-        // }
+        } catch (\Exception $e) {
+            $this->markAsFailed();
+            $this->setResults([$e->getMessage()]);
+        }
 
         $this->fireEvents();
     }

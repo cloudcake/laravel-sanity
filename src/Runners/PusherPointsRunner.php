@@ -2,21 +2,21 @@
 
 namespace Sanity\Runners;
 
-class CommitterPointsRunner extends Runner
+class PusherPointsRunner extends Runner
 {
     /**
      * Identifier for the runner.
      *
      * @var string
      */
-    protected $name = 'committers';
+    protected $name = 'Pushers';
 
     /**
      * Label to display for the badge.
      *
      * @var string
      */
-    protected $badgeLabel = 'Top Committers';
+    protected $badgeLabel = 'Top Pushers';
 
     /**
      * Indicate whether or not this runner should fire events.
@@ -68,18 +68,18 @@ class CommitterPointsRunner extends Runner
 
         $results['status'] = 'none';
 
-        $committers = collect($results['players'])->sortByDesc(function ($value, $key) {
+        $pushers = collect($results['players'])->sortByDesc(function ($value, $key) {
             return $value;
         })->all();
 
-        $committers = array_slice($results['players'], 0, 3);
-        $committersTmp = [];
+        $pushers = array_slice($results['players'], 0, 3);
+        $pushersTmp = [];
 
-        foreach ($committers as $saviour => $points) {
-            $committersTmp[] = $saviour.' ('.number_format($points).')';
+        foreach ($pushers as $saviour => $points) {
+            $pushersTmp[] = $saviour.' ('.number_format($points).')';
         }
 
-        $results['status'] = str_replace('-', '--', implode(', ', $committersTmp));
+        $results['status'] = str_replace('-', '--', implode(', ', $pushersTmp));
 
         $this->setResults($results);
         $this->markAsPassed();
