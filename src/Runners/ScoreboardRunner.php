@@ -69,6 +69,15 @@ class ScoreboardRunner extends Runner
             return $value;
         })->all();
 
+        $leaders = array_slice($results['players'], 0, 3);
+        $leadersTmp = [];
+
+        foreach ($leaders as $leader => $points) {
+            $leadersTmp[] = $leader.' ('.number_format($points).')';
+        }
+
+        $results['status'] = str_replace('-', '--', implode(', ', $leadersTmp));
+
         $this->setResults($results);
     }
 
@@ -79,6 +88,6 @@ class ScoreboardRunner extends Runner
      */
     public function getBadgeStatus()
     {
-        return 'Incompatible';
+        return rawurlencode($this->getResults()['status'] ?? 'none');
     }
 }
