@@ -39,6 +39,6 @@ class DuskTestRunner extends Runner
 
         $this->setResults($results);
 
-        ($code == 0) ? $this->passed() : $this->failed();
+        ($code == 0) ? $this->markAsPassed() : $this->markAsFailed();
     }
 }

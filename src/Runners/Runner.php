@@ -15,18 +15,25 @@ class Runner
     private $cache;
 
     /**
-     * Indicator of the current runner status.
+     * Existing cache information.
      *
-     * @var integer|null
+     * @var array|null
      */
-    private $state;
+    private $store;
 
     /**
-     * Container for results.
+     * The commit information that triggered the test.
      *
-     * @var array
+     * @var array|null
      */
-    private $results = [];
+    private $commit;
+
+    /**
+     * Key name of the runner.
+     *
+     * @var string|null
+     */
+    private $keyName;
 
     /**
      * Identifier for the runner.
@@ -89,7 +96,14 @@ class Runner
      *
      * @var boolean
      */
-    protected $shouldFireEvents = false;
+    protected $shouldFireEvents = true;
+
+    /**
+     * Indicate whether this runner collects stats.
+     *
+     * @var boolean
+     */
+    protected $collectsStats = false;
 
     /**
      * Construct instance of runner.
@@ -99,6 +113,14 @@ class Runner
     public function __construct()
     {
         $this->cache = Cache::store(config('sanity.cache'), 'file');
+        $this->store = $this->cache->get("sanity.{$this->getKeyName()}", [
+            'state'     => -1,
+            'butcher'   => false,
+            'saviour'   => false,
+            'saved'     => false,
+            'butchered' => false,
+            'results'   => []
+        ]);
     }
 
     /**
@@ -106,15 +128,17 @@ class Runner
      *
      * @return self
      */
-    public function runNow()
+    public function runNow(array $commit)
     {
-        try {
+        $this->commit = $commit;
+
+        //try {
             $this->run();
-        } catch (\Exception $e) {
-            $this->failed();
-            $this->setResults([$e->getMessage()]);
-        }
-        
+        // } catch (\Exception $e) {
+        //     $this->markAsFailed();
+        //     $this->setResults([$e->getMessage()]);
+        // }
+
         $this->fireEvents();
     }
 
@@ -138,9 +162,16 @@ class Runner
      *
      * @return self
      */
-    public function passed()
+    public function markAsPassed()
     {
-        $this->state = 1;
+        if ($this->failing() || $this->hasntRun()) {
+            $this->store['saviour'] = $this->commit;
+            $this->store['saved'] = true;
+            $this->store['butchered'] = false;
+        }
+
+        $this->store['state'] = 1;
+
         $this->cacheState();
 
         return $this;
@@ -151,9 +182,16 @@ class Runner
      *
      * @return self
      */
-    public function failed()
+    public function markAsFailed()
     {
-        $this->state = 0;
+        if ($this->passing() || $this->hasntRun()) {
+            $this->store['butcher'] = $this->commit;
+            $this->store['saved'] = false;
+            $this->store['butchered'] = true;
+        }
+
+        $this->store['state'] = 0;
+
         $this->cacheState();
 
         return $this;
@@ -166,7 +204,7 @@ class Runner
      */
     public function passing()
     {
-        return $this->state == 1;
+        return $this->store['state'] == 1;
     }
 
     /**
@@ -176,7 +214,7 @@ class Runner
      */
     public function failing()
     {
-        return $this->state == 0;
+        return $this->store['state'] == 0;
     }
 
     /**
@@ -186,7 +224,7 @@ class Runner
      */
     public function hasntRun()
     {
-        return $this->state == -1 || is_null($this->state);
+        return $this->store['state'] == -1 || is_null($this->store['state']);
     }
 
     /**
@@ -196,7 +234,9 @@ class Runner
      */
     public function setResults(array $results)
     {
-        $this->results = $results;
+        $this->store['results'] = $results;
+
+        $this->cacheState();
 
         return $this;
     }
@@ -208,17 +248,17 @@ class Runner
      */
     public function getResults()
     {
-        return $this->results;
+        return $this->store['results'];
     }
 
     /**
-     * Get badge label.
+     * Get the current commit information.
      *
-     * @return string
+     * @return array
      */
-    public function getBadgeLabel()
+    public function getCommit()
     {
-        return rawurlencode($this->badgeLabel);
+        return $this->commit;
     }
 
     /**
@@ -228,29 +268,11 @@ class Runner
      */
     public function getKeyName()
     {
-        return Str::slug($this->name);
-    }
-
-    /**
-     * Get badge label.
-     *
-     * @return string
-     */
-    public function getBadgeStatus()
-    {
-        $status = $this->badgeValuePending;
-
-        if (is_null($this->state)) {
-            $this->state = $this->cache->get("sanity.states.{$this->getKeyName()}", -1);
+        if (!$this->keyName) {
+            $this->keyName = Str::slug($this->name);
         }
 
-        if ($this->passing()) {
-            $status = $this->badgeValuePassing;
-        } elseif ($this->failing()) {
-            $status = $this->badgeValueFailing;
-        }
-
-        return rawurlencode($status);
+        return $this->keyName;
     }
 
     /**
@@ -272,6 +294,84 @@ class Runner
     }
 
     /**
+     * Get badge label.
+     *
+     * @return string
+     */
+    public function getBadgeLabel()
+    {
+        return rawurlencode($this->badgeLabel);
+    }
+
+    /**
+     * Get badge status.
+     *
+     * @return string
+     */
+    public function getBadgeStatus()
+    {
+        $status = $this->badgeValuePending;
+
+        if ($this->passing()) {
+            $status = $this->badgeValuePassing;
+        } elseif ($this->failing()) {
+            $status = $this->badgeValueFailing;
+        }
+
+        return rawurlencode($status);
+    }
+
+    /**
+     * Return true if the runner has changed to failed afer this run.
+     *
+     * @return boolean
+     */
+    public function wasButchered()
+    {
+        return $this->store['butchered'] ?? false;
+    }
+
+    /**
+     * Return true if the runner has changed to passing afer this run.
+     *
+     * @return boolean
+     */
+    public function wasSaved()
+    {
+        return $this->store['saved'] ?? false;
+    }
+
+    /**
+     * Return commit that last broke the test.
+     *
+     * @return array
+     */
+    public function getButcher()
+    {
+        return $this->store['butcher'];
+    }
+
+    /**
+     * Return commit that last fixed the test.
+     *
+     * @return array
+     */
+    public function getSaviour()
+    {
+        return $this->store['butcher'];
+    }
+
+    /**
+     * Return true if this runner collects stats.
+     *
+     * @return boolean
+     */
+    public function collectsStats()
+    {
+        return $this->collectsStats;
+    }
+
+    /**
      * Fire runner events, if configured.
      *
      * @return self
@@ -290,7 +390,9 @@ class Runner
      */
     private function cacheState()
     {
-        $this->cache->forever("sanity.states.{$this->getKeyName()}", $this->state);
+        if ($this->store) {
+            $this->cache->forever("sanity.{$this->getKeyName()}", $this->store);
+        }
 
         return $this;
     }

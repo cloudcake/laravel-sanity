@@ -11,7 +11,7 @@ class Factory
      *
      * @var array
      */
-    private static $runners = [];
+    public static $runners = [];
 
     /**
      * Create new instance of Badges.
@@ -52,6 +52,8 @@ class Factory
     /**
      * Create instantiations of valid runners.
      *
+     * @throws Exception If a duplicate runner name is found.
+     *
      * @return void
      */
     private function setupRunners()
@@ -60,7 +62,14 @@ class Factory
 
         foreach ($runners as $runner) {
             if (is_subclass_of($runner, \Sanity\Runners\Runner::class)) {
-                self::$runners[Str::slug(($instance = new $runner())->getName())] = $instance;
+                $runnerInstance = new $runner();
+                $runnerKey = $runnerInstance->getKeyName();
+
+                if (isset(self::$runners[$runnerKey])) {
+                    throw new \Exception("Duplicate runner name defined: {$runnerInstance->getName()}");
+                }
+
+                self::$runners[$runnerKey] = $runnerInstance;
             }
         }
     }
@@ -70,15 +79,20 @@ class Factory
      *
      * @return void
      */
-    public function runRunners($data = null)
+    public function runRunners($commit = null)
     {
-        $this->deployment = $data ?? file_get_contents(__DIR__.'/Fixtures/forge.json');
+        $commit = $commit ?? include(__DIR__.'/Fixtures/Forge.php');
 
         $this->checkEnvironment();
         $this->runPreRunners();
 
+        // Stat collectors must run last
+        self::$runners = collect(self::$runners)->sortBy(function ($runner, $s) {
+            return $runner->collectsStats();
+        })->all();
+
         foreach (self::$runners as $runner) {
-            $runner->runNow();
+            $runner->runNow($commit);
         }
 
         $this->runPostRunners();

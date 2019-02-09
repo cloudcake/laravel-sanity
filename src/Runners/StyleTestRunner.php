@@ -38,6 +38,6 @@ class StyleTestRunner extends Runner
 
         $this->setResults($results);
 
-        ($results['totals']['errors'] == 0) ? $this->passed() : $this->failed();
+        ($results['totals']['errors'] == 0) ? $this->markAsPassed() : $this->markAsFailed();
     }
 }
