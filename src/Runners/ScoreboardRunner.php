@@ -55,12 +55,13 @@ class ScoreboardRunner extends Runner
         })->all();
 
         $player = $this->getCommit()['commit_author'];
-        $playerPoints = $this->getResults()['players'][$player] ?? 0;
+        $playerPoints = 0;
         $results['rules'] = [];
 
         foreach ($runners as $runner) {
             $runnerPoints = $runner->getResults()['players'][$player] ?? 0;
             $playerPoints = ($playerPoints += $runnerPoints);
+
             $results['rules'][$runner->getName()] = $runner->getPoints();
         }
 
