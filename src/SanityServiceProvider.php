@@ -35,6 +35,7 @@ class SanityServiceProvider extends EventServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 \Sanity\Commands\SanityMock::class,
+                \Sanity\Commands\SanityReset::class,
             ]);
         }
     }

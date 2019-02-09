@@ -64,6 +64,8 @@ class ButcherPointsRunner extends Runner
         $player = $commit['commit_author'];
         $points = $results['players'][$player] ?? 0;
 
+        $results['players'] = $results['players'] ?? [];
+
         foreach ($runners as $runner) {
             if ($runner->wasButchered()) {
                 $results['players'][$player] = ($points - $this->points);
