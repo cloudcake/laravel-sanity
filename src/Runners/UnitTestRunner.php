@@ -21,7 +21,7 @@ class UnitTestRunner extends Runner
     /**
      * Indicate whether or not this runner should fire events.
      *
-     * @var boolean
+     * @var bool
      */
     protected $shouldFireEvents = true;
 

@@ -13,8 +13,8 @@ class Subscriber
      */
     public function onRunnerFinished($e)
     {
-        $runnerClass  = $e->runner;
-        $runnerState  = $runnerClass->passing() ? 'Success' : 'Failure';
+        $runnerClass = $e->runner;
+        $runnerState = $runnerClass->passing() ? 'Success' : 'Failure';
         $runnerMethod = "on{$runnerClass->getName()}{$runnerState}";
 
         echo 'hear event';

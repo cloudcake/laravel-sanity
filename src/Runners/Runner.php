@@ -94,14 +94,14 @@ class Runner
     /**
      * Indicate whether or not this runner should fire events.
      *
-     * @var boolean
+     * @var bool
      */
     protected $shouldFireEvents = true;
 
     /**
      * Indicate whether this runner collects stats.
      *
-     * @var boolean
+     * @var bool
      */
     protected $collectsStats = false;
 
@@ -119,7 +119,7 @@ class Runner
             'saviour'   => false,
             'saved'     => false,
             'butchered' => false,
-            'results'   => []
+            'results'   => [],
         ]);
     }
 
@@ -200,7 +200,7 @@ class Runner
     /**
      * Return true if runner is passing.
      *
-     * @return boolean
+     * @return bool
      */
     public function passing()
     {
@@ -210,7 +210,7 @@ class Runner
     /**
      * Return true if runner is failing.
      *
-     * @return boolean
+     * @return bool
      */
     public function failing()
     {
@@ -220,7 +220,7 @@ class Runner
     /**
      * Return true if runner has not run.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasntRun()
     {
@@ -324,7 +324,7 @@ class Runner
     /**
      * Return true if the runner has changed to failed afer this run.
      *
-     * @return boolean
+     * @return bool
      */
     public function wasButchered()
     {
@@ -334,7 +334,7 @@ class Runner
     /**
      * Return true if the runner has changed to passing afer this run.
      *
-     * @return boolean
+     * @return bool
      */
     public function wasSaved()
     {
@@ -364,7 +364,7 @@ class Runner
     /**
      * Return true if this runner collects stats.
      *
-     * @return boolean
+     * @return bool
      */
     public function collectsStats()
     {

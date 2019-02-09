@@ -33,7 +33,7 @@ class Badges
      */
     public function get($runner, $queryString)
     {
-        $label  = $runner->getBadgeLabel();
+        $label = $runner->getBadgeLabel();
         $status = $runner->getBadgeStatus();
         $colour = $runner->getBadgeColour();
 
@@ -66,7 +66,7 @@ class Badges
     /**
      * Fetch badge from shields.io.
      *
-     * @return string|boolean
+     * @return string|bool
      */
     private function getNewBadge($label, $status, $colour, $queryString)
     {
@@ -84,7 +84,6 @@ class Badges
 
         return false;
     }
-
 
     /**
      * Get the actual badge and cache it.
