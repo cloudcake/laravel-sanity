@@ -35,6 +35,18 @@ class SlackMessage
     }
 
     /**
+     * Set a raw payload.
+     *
+     * @return self
+     */
+    public function raw(array $raw)
+    {
+        $this->payload = $raw;
+
+        return $this;
+    }
+
+    /**
      * Set username.
      *
      * @return self
