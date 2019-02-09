@@ -70,9 +70,6 @@ return [
       Sanity\Runners\UnitTestRunner::class,
       Sanity\Runners\DuskTestRunner::class,
       Sanity\Runners\StyleTestRunner::class,
-      Sanity\Runners\PusherPointsRunner::class,
-      Sanity\Runners\ButcherPointsRunner::class,
-      Sanity\Runners\SaviourPointsRunner::class,
       Sanity\Runners\ScoreboardRunner::class,
   ],
 

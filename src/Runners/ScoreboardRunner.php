@@ -2,7 +2,7 @@
 
 namespace Sanity\Runners;
 
-class ScoreboardRunner extends Runner
+class ScoreboardRunner extends RunnerForMiniGame
 {
     /**
      * Identifier for the runner.
@@ -19,13 +19,6 @@ class ScoreboardRunner extends Runner
     protected $badgeLabel = 'Scoreboard';
 
     /**
-     * Indicate whether or not this runner should fire events.
-     *
-     * @var bool
-     */
-    protected $shouldFireEvents = true;
-
-    /**
      * Label to display for the badge.
      *
      * @var string
@@ -33,11 +26,30 @@ class ScoreboardRunner extends Runner
     protected $badgeColourPassing = '99cc00';
 
     /**
-     * Indicate whether this runner collects stats.
+     * Map of points to allocate on tests.
      *
-     * @var bool
+     * @var array
      */
-    protected $collectsStats = true;
+    protected $pointsMap = [
+        'Dusk' => [
+            'passing' => 2,
+            'fixed'  => 5,
+            'failing' => -3,
+            'broken'  => -10,
+        ],
+        'Unit' => [
+            'passing' => 2,
+            'fixed'  => 5,
+            'failing' => -3,
+            'broken'  => -10,
+        ],
+        'Style' => [
+            'passing' => 2,
+            'fixed'  => 10,
+            'failing' => -20,
+            'broken'  => -25,
+        ]
+    ];
 
     /**
      * Runner execution.
@@ -47,39 +59,126 @@ class ScoreboardRunner extends Runner
     protected function run() : void
     {
         $results = $this->getResults();
-
-        $runnersWanted = ['Saviours', 'Butchers', 'Pushers'];
-
-        $runners = collect(\Sanity\Factory::$runners)->filter(function ($runner, $key) use ($runnersWanted) {
-            return in_array($runner->getName(), $runnersWanted, true);
-        })->all();
-
-        $player = $this->getCommit()['commit_author'];
-        $playerPoints = 0;
-        $results['rules'] = [];
+        $runners = $this->getRealRunners(array_keys($this->pointsMap));
+        $pusher  = $this->getPusherName();
+        $rState  = '';
+        $pCount  = 0;
 
         foreach ($runners as $runner) {
-            $runnerPoints = $runner->getResults()['players'][$player] ?? 0;
-            $playerPoints = ($playerPoints += $runnerPoints);
+            if ($runner->wasJustFixed()) {
+                $rState = 'fixed';
+            } elseif ($runner->wasJustBroken()) {
+                $rState = 'broken';
+            } elseif ($runner->isCurrentlyPassing()) {
+                $rState = 'passing';
+            } elseif ($runner->isCurrentlyFailing()) {
+                $rState = 'failing';
+            }
 
-            $results['rules'][$runner->getName()] = $runner->getPoints();
+            $pCount = $this->pointsMap[$runner->getName()][$rState];
+            $results = $this->updateScore($pusher, $results, $pCount);
         }
 
-        $results['players'][$player] = $playerPoints;
+        $results = $this->updateRules($results);
+        $results = $this->sortPlayersByPoints($results);
+        $results = $this->createLabelForBadge($results);
+
+        $this->setResults($results);
+    }
+
+    /**
+     * Allocate points to player and return result.
+     *
+     * @param string $pusher  The pusher name,
+     * @param array  $results The existing results set.
+     * @param int    $points  The number of points to allocate.
+     *
+     * @return array
+     */
+    private function updateScore($pusher, $results, $points)
+    {
+        if (!isset($results['players'][$pusher])) {
+            $results['players'][$pusher] = $points;
+        } else {
+            if ($points < 0) {
+                $results['players'][$pusher] -= $points;
+            } else {
+                $results['players'][$pusher] += $points;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Sort players by points in descening order.
+     *
+     * @param array $results The existing result set.
+     *
+     * @return array
+     */
+    private function sortPlayersByPoints(array $results)
+    {
         $results['players'] = collect($results['players'])->sortByDesc(function ($value, $key) {
             return $value;
         })->all();
 
-        $leaders = array_slice($results['players'], 0, 3);
-        $leadersTmp = [];
+        return $results;
+    }
 
-        foreach ($leaders as $leader => $points) {
-            $leadersTmp[] = $leader.' ('.number_format($points).')';
+    /**
+     * Create displayable label for runner badge.
+     *
+     * @param array $results The existing result set.
+     *
+     * @return array
+     */
+    private function createLabelForBadge(array $results)
+    {
+        $topPlayers = array_slice($results['players'], 0, 3);
+        $topPlayersTemp = [];
+
+        foreach ($topPlayers as $leader => $points) {
+            $topPlayersTemp[] = $leader.' ('.number_format($points).')';
         }
 
-        $results['status'] = str_replace('-', '--', implode(', ', $leadersTmp));
+        $results['badge'] = str_replace('-', '--', implode(', ', $topPlayersTemp));
 
-        $this->setResults($results);
+        return $results;
+    }
+
+    /**
+     * Add the point map allocation to the result.
+     *
+     * @param array $results The existing result set.
+     *
+     * @return array
+     */
+    private function updateRules(array $results)
+    {
+        $results['rules'] = $this->pointsMap;
+
+        return $results;
+    }
+
+    /**
+     * Get mini game players.
+     *
+     * @return array
+     */
+    public function getPlayers()
+    {
+        return $this->getResults()['players'] ?? [];
+    }
+
+    /**
+     * Get mini game rules.
+     *
+     * @return array
+     */
+    public function getRules()
+    {
+        return $this->getResults()['rules'] ?? $this->pointsMap;
     }
 
     /**
@@ -89,6 +188,8 @@ class ScoreboardRunner extends Runner
      */
     public function getBadgeStatus()
     {
-        return rawurlencode($this->getResults()['status'] ?? 'none');
+        $results = $this->getResults();
+
+        return rawurlencode($results['badge'] ?? 'none');
     }
 }

@@ -114,12 +114,11 @@ class Runner
     {
         $this->cache = Cache::store(config('sanity.cache'), 'file');
         $this->store = $this->cache->get("sanity.{$this->getKeyName()}", [
-            'state'     => -1,
-            'butcher'   => false,
-            'saviour'   => false,
-            'saved'     => false,
-            'butchered' => false,
-            'results'   => [],
+            'state'           => -1,
+            'previousPassing' => false,
+            'previousFailing' => false,
+            'previousCommit'  => false,
+            'results'         => [],
         ]);
     }
 
@@ -132,15 +131,10 @@ class Runner
     {
         $this->commit = $commit;
 
-        try {
-            $this->run();
+        $this->run();
 
-            if ($this->collectsStats()) {
-                $this->markAsPassed();
-            }
-        } catch (\Exception $e) {
-            $this->markAsFailed();
-            $this->setResults([$e->getMessage()]);
+        if ($this->collectsStats()) {
+            $this->markAsPassed();
         }
 
         $this->fireEvents();
@@ -168,13 +162,9 @@ class Runner
      */
     public function markAsPassed()
     {
-        if ($this->failing() || $this->hasntRun()) {
-            $this->store['saviour'] = $this->commit;
-            $this->store['saved'] = true;
-            $this->store['butchered'] = false;
-        } else {
-            $this->store['saved'] = false;
-            $this->store['butchered'] = false;
+        if ($this->isCurrentlyFailing()) {
+            $this->store['previousFailing'] = true;
+            $this->store['previousPassing'] = false;
         }
 
         $this->store['state'] = 1;
@@ -191,13 +181,9 @@ class Runner
      */
     public function markAsFailed()
     {
-        if ($this->passing()) {
-            $this->store['butcher'] = $this->commit;
-            $this->store['saved'] = false;
-            $this->store['butchered'] = true;
-        } else {
-            $this->store['saved'] = false;
-            $this->store['butchered'] = false;
+        if ($this->isCurrentlyPassing()) {
+            $this->store['previousFailing'] = false;
+            $this->store['previousPassing'] = true;
         }
 
         $this->store['state'] = 0;
@@ -205,6 +191,66 @@ class Runner
         $this->cacheState();
 
         return $this;
+    }
+
+    /**
+     * Return true if runner was previously failing.
+     *
+     * @return bool
+     */
+    public function wasPreviouslyFailing()
+    {
+        return $this->store['previousFailing'];
+    }
+
+    /**
+     * Return true if runner was previously passing.
+     *
+     * @return bool
+     */
+    public function wasPreviouslyPassing()
+    {
+        return $this->store['previousPassing'];
+    }
+
+    /**
+     * Return true if runner is currently passing.
+     *
+     * @return bool
+     */
+    public function isCurrentlyPassing()
+    {
+        return $this->passing();
+    }
+
+    /**
+     * Return true if runner is currently passing.
+     *
+     * @return bool
+     */
+    public function isCurrentlyFailing()
+    {
+        return $this->failing();
+    }
+
+    /**
+     * Return true if runner was previously failing and is now passing.
+     *
+     * @return bool
+     */
+    public function wasJustFixed()
+    {
+        return $this->wasPreviouslyFailing() && $this->isCurrentlyPassing();
+    }
+
+    /**
+     * Return true if runner was previously failing and is now passing.
+     *
+     * @return bool
+     */
+    public function wasJustBroken()
+    {
+        return $this->wasPreviouslyPassing() && $this->isCurrentlyFailing();
     }
 
     /**
@@ -329,56 +375,6 @@ class Runner
         }
 
         return rawurlencode($status);
-    }
-
-    /**
-     * Return true if the runner has changed to failed afer this run.
-     *
-     * @return bool
-     */
-    public function wasButchered()
-    {
-        return $this->store['butchered'] ?? false;
-    }
-
-    /**
-     * Return true if the runner has changed to passing afer this run.
-     *
-     * @return bool
-     */
-    public function wasSaved()
-    {
-        return $this->store['saved'] ?? false;
-    }
-
-    /**
-     * Return commit that last broke the test.
-     *
-     * @return array
-     */
-    public function getButcher()
-    {
-        return $this->store['butcher'];
-    }
-
-    /**
-     * Return commit that last fixed the test.
-     *
-     * @return array
-     */
-    public function getSaviour()
-    {
-        return $this->store['butcher'];
-    }
-
-    /**
-     * Return number of points the test adds/substracts.
-     *
-     * @return int
-     */
-    public function getPoints()
-    {
-        return $this->points;
     }
 
     /**
