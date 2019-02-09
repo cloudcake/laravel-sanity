@@ -18,7 +18,7 @@ class Subscriber
         $runnerMethod = "on{$runnerClass->getName()}{$runnerState}";
 
         if (method_exists($this, $runnerMethod)) {
-            $this->$runnerMethod($runner);
+            $this->$runnerMethod($runnerClass);
         }
     }
 
