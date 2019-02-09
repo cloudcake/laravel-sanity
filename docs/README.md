@@ -91,23 +91,12 @@ The dusk runner runs your configured Laravel Dusk tests.
 
 The style runner performs a strict set of PSR (with some customizations) rules to ensure that your code format and documentation is top-notch.
 
-#### Pusher Points Runner
+#### Scoreboard Runner
 
-[(`\Sanity\Runners\PusherPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/PusherPointsRunner.php)
+[(`\Sanity\Runners\ScoreboardRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/ScoreboardRunner.php)
 
-The pusher points runner tracks the number of pushes (not commits) each contributor has submitted since installing Sanity and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
+The scoreboard runner applies a points system to each pusher. When a pusher fixes, breaks or leaves other runners in the same state they were before their push, an allocated number of points (could be negative) will be associated to that user.
 
-#### Butcher Points Runner
-
-[(`\Sanity\Runners\ButcherPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/ButcherPointsRunner.php)
-
-The butcher points runner tracks the number of pushes a user has submitted that have broken one or more tests and gives the user a substracted number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
-
-#### Saviour Points Runner
-
-[(`\Sanity\Runners\SaviourPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/SaviourPointsRunner.php)
-
-The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 ### Creating Custom Runners
 
@@ -143,9 +132,7 @@ We'll create a runner that tests if the `storage` directory is writable.
         Sanity\Runners\UnitTestRunner::class,
         Sanity\Runners\DuskTestRunner::class,
         Sanity\Runners\StyleTestRunner::class,
-        Sanity\Runners\PusherPointsRunner::class,
-        Sanity\Runners\ButcherPointsRunner::class,
-        Sanity\Runners\SaviourPointsRunner::class,
+        Sanity\Runners\ScoreboardRunner::class,
         App\WritableStorageTestRunner::class
     ],
 
@@ -243,6 +230,14 @@ Returns true if the runner has passed.
 
 Returns true if the runner has failed.
 
+#### `isCurrentlyPassing()`
+
+Alias of `passing()`. Returns true if the runner has passed.
+
+#### `isCurrentlyFailing()`
+
+Alias of `failing()`. Returns true if the runner has failed.
+
 #### `hasntRun()`
 
 Returns true if the runner hasn't run yet.
@@ -255,23 +250,15 @@ Stores logs in array format for the recorded runner. This is required if you wis
 
 Get the latest commit information from the push that triggered the runner to execute.
 
-#### `getButcher()`
-
-Returns the commit array of the push that broke the run.
-
-#### `getSaviour()`
-
-Returns the commit array of the push that fixed the run.
-
 #### `getResults()`
 
 Get stored logs from the runner as an array.
 
-#### `wasButchered()`
+#### `wasJustBroken()`
 
 Returns true if this runner was previously successful, but currently failing.
 
-#### `wasSaved()`
+#### `wasJustFixed()`
 
 Returns true if this runner was previously failing, but currently passing.
 
@@ -392,7 +379,7 @@ There may be situations where you need to run some setup before the tests commen
 Add the `\App\MyExamplePreRunner::class` file to the `pre-runners` block in `configs/sanity.php`:
 
     'pre-runners' => [
-      \App\MyExamplePreRunner::class,
+        \App\MyExamplePreRunner::class,
     ],
 
 Create the pre-runner:
