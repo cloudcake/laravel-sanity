@@ -51,11 +51,11 @@ class ScoreboardRunner extends Runner
         $runnersWanted = ['Saviours', 'Butchers', 'Pushers'];
 
         $runners = collect(\Sanity\Factory::$runners)->filter(function ($runner, $key) use ($runnersWanted) {
-            return in_array($runnersWanted, $runner->getName(), true);
+            return in_array($runner->getName(), $runnersWanted, true);
         })->all();
 
         $player = $this->getCommit()['commit_author'];
-        $playerPoints = $this->getResult()['players'][$player] ?? 0;
+        $playerPoints = $this->getResults()['players'][$player] ?? 0;
 
         foreach ($runners as $runner) {
             $runnerPoints = $runner->getResults()['players'][$player] ?? 0;
