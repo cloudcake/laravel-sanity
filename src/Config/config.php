@@ -62,8 +62,7 @@ return [
   | are called for disabled runners will return as 'not running' or the last
   | known state before the runner was disabled.
   |
-  | You may define your own runners here as long as it extends the base Sanity
-  | runner \Sanity\Runners\Runner. See the documentation.
+  | See documentation for descriptions of the predefined runners.
   |
   */
 
@@ -71,7 +70,9 @@ return [
       Sanity\Runners\UnitTestRunner::class,
       Sanity\Runners\DuskTestRunner::class,
       Sanity\Runners\StyleTestRunner::class,
-      Sanity\Runners\PointsRunner::class,
+      Sanity\Runners\ButcherPointsRunner::class,
+      Sanity\Runners\SaviourPointsRunner::class,
+      Sanity\Runners\CommitterPointsRunner::class,
   ],
 
   /*
