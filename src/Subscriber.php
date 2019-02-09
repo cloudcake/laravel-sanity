@@ -18,7 +18,7 @@ class Subscriber
         $runnerMethod = "on{$runnerClass->getName()}{$runnerState}";
 
         echo 'hear event';
-        
+
         if (method_exists($this, $runnerMethod)) {
             $this->$runnerMethod($runner);
         }
