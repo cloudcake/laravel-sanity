@@ -33,22 +33,22 @@ class ScoreboardRunner extends RunnerForMiniGame
     protected $pointsMap = [
         'Dusk' => [
             'passing' => 2,
-            'fixed'  => 5,
+            'fixed'   => 5,
             'failing' => -3,
             'broken'  => -10,
         ],
         'Unit' => [
             'passing' => 2,
-            'fixed'  => 5,
+            'fixed'   => 5,
             'failing' => -3,
             'broken'  => -10,
         ],
         'Style' => [
             'passing' => 2,
-            'fixed'  => 10,
+            'fixed'   => 10,
             'failing' => -20,
             'broken'  => -25,
-        ]
+        ],
     ];
 
     /**
@@ -60,9 +60,9 @@ class ScoreboardRunner extends RunnerForMiniGame
     {
         $results = $this->getResults();
         $runners = $this->getRealRunners(array_keys($this->pointsMap));
-        $pusher  = $this->getPusherName();
-        $rState  = '';
-        $pCount  = 0;
+        $pusher = $this->getPusherName();
+        $rState = '';
+        $pCount = 0;
 
         foreach ($runners as $runner) {
             if ($runner->wasJustFixed()) {
