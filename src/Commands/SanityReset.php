@@ -4,6 +4,7 @@ namespace Sanity\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use Sanity\Factory;
 
 class SanityReset extends Command
 {
@@ -28,7 +29,7 @@ class SanityReset extends Command
      */
     public function handle()
     {
-        $factory = new \Sanity\Factory();
+        $factory = new Factory();
         $cache   = Cache::store(config('sanity.cache', 'file'));
 
         foreach (Factory::$runners as $runner) {
