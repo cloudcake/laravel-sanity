@@ -175,17 +175,17 @@ The label to display on the generated badge.
 #### `badgeColourPassing`
 `protected $badgeColourPassing` `string` default: `99cc00`
 
-The colour of the badge to display when the runner is passing. The value should be a hex value **without the leading hash (#)**.
+The colour of the badge when passing. The value should be a hex value **without the leading hash (#)**.
 
 #### `badgeColourFailing`
 `protected $badgeColourFailing` `string` default: `c53232`
 
-The colour of the badge to display when the runner is failing. The value should be a hex value **without the leading hash (#)**.
+The colour of the badge when failing. The value should be a hex value **without the leading hash (#)**.
 
 #### `badgeColourUnknown`
 `protected $badgeColourUnknown` `string` default: `989898`
 
-The colour of the badge to display when the runner is hasn't been run or is pending. The value should be a hex value **without the leading hash (#)**.
+The colour of the badge when pending. The value should be a hex value **without the leading hash (#)**.
 
 #### `badgeValuePassing`
 `protected $badgeValuePassing` `string` default: `passing`
