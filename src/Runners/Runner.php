@@ -172,6 +172,9 @@ class Runner
             $this->store['saviour'] = $this->commit;
             $this->store['saved'] = true;
             $this->store['butchered'] = false;
+        } else {
+            $this->store['saved'] = false;
+            $this->store['butchered'] = false;
         }
 
         $this->store['state'] = 1;
@@ -192,6 +195,9 @@ class Runner
             $this->store['butcher'] = $this->commit;
             $this->store['saved'] = false;
             $this->store['butchered'] = true;
+        } else {
+            $this->store['saved'] = false;
+            $this->store['butchered'] = false;
         }
 
         $this->store['state'] = 0;
