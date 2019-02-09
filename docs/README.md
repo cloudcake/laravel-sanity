@@ -72,22 +72,34 @@ Runners are individual classes used to perform tests (and other tasks) on your c
 ### Prepackaged Runners
 Sanity is packaged with some useful predefined runners out of the box to express its awesomeness.
 
-#### Unit Runner (`\Sanity\Runners\UnitTestRunner`)
+#### Unit Runner
+[(`\Sanity\Runners\UnitTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/UnitTestRunner.php)
+
 The unit runner runs your configured PHPUnit tests.
 
-#### Dusk Runner (`\Sanity\Runners\DuskTestRunner`)
+#### Dusk Runner
+[(`\Sanity\Runners\DuskTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/DuskTestRunner.php)
+
 The dusk runner runsyour configured Laravel Dusk tests.
 
-#### Style Runner (`\Sanity\Runners\StyleTestRunner`)
+#### Style Runner
+[(`\Sanity\Runners\StyleTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/StyleTestRunner.php)
+
 The style runner performs a strict set of PSR (with some customizations) rules to ensure that your code format and documentation is top-notch.
 
-#### Pusher Points Runner (`\Sanity\Runners\PusherPointsRunner`)
+#### Pusher Points Runner
+[(`\Sanity\Runners\PusherPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/PusherPointsRunner.php)
+
 The pusher points runner tracks the number of pushes (not commits) each contributor has submitted since installing Sanity and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
-#### Butcher Points Runner (`\Sanity\Runners\ButcherPointsRunner`)
+#### Butcher Points Runner
+[(`\Sanity\Runners\ButcherPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/ButcherPointsRunner.php)
+
 The butcher points runner tracks the number of pushes a user has submitted that have broken one or more tests and gives the user a substracted number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
-#### Saviour Points Runner (`\Sanity\Runners\SaviourPointsRunner`)
+#### Saviour Points Runner
+[(`\Sanity\Runners\SaviourPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/SaviourPointsRunner.php)
+
 The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
 
 ## Listening for results
