@@ -374,7 +374,7 @@ Create the pre-runner:
         }
     }
 
-## Modifying Code Sniffer Rules
+## Modifying Style/Standards Rules
 
 Sanity uses PHP CodeSniffer to inspect and judge your code format based on a set of customised rules in accordance to PSR. If you wish, you may edit these rules by modifying the `phpcs.xml` file within your project root (published by Sanity). Within this file you can include and exlcude paths.
 
@@ -382,43 +382,21 @@ For information on how to manage and modify the PHP CodeSniffer rules, view the 
 
 # Badges
 
-Sanity has badges! Thanks to [shields.io](https://shields.io) Sanity creates badges indicating the status of your applications tests. Once a badge is create, it will be cached.
+Sanity has badges! Thanks to [shields.io](https://shields.io) Sanity creates badges indicating the status of your applications tests. Once a badge is created, it will be cached.
 
-## Unit Tests Badge
+## Viewing your runner badges
+Badges are automatically created for every runner and may be viewed by calling the sluggified `$name` attribute on the runner, for example:
 
-Hit your domain with the configured `badges->unit` endpoint:
+If your runner's configured name is `Green Apple Tree`, then the name to call in the badges URL will be:
+`http://yourhost/sanity/badges/green-apple-tree.svg`
 
-Example: `https://staging.example.org/sanity/badges/unit.svg`
-
-Which will produce (dependeing on your status):
-
-![badge](https://img.shields.io/badge/tests-passing-99cc00.svg)
-![badge](https://img.shields.io/badge/tests-failing-c53232.svg)
-![badge](https://img.shields.io/badge/tests-not%20running-989898.svg)
-
-## Dusk Tests Badge
-
-Hit your domain with the configured `badges->dusk` endpoint:
-
-Example: `https://staging.example.org/sanity/badges/dusk.svg`
+Example: `https://staging.example.org/sanity/badges/green-apple-tree.svg`
 
 Which will produce (dependeing on your status):
 
-![badge](https://img.shields.io/badge/dusk-passing-99cc00.svg)
-![badge](https://img.shields.io/badge/dusk-failing-c53232.svg)
-![badge](https://img.shields.io/badge/dusk-not%20running-989898.svg)
-
-## Style/Standards Badge
-
-Hit your domain with the configured `badges->style` endpoint:
-
-Example: `https://staging.example.org/sanity/badges/style.svg`
-
-Which will produce (dependeing on your status):
-
-![badge](https://img.shields.io/badge/coding%20standards-passing-99cc00.svg)
-![badge](https://img.shields.io/badge/coding%20standards-failing-c53232.svg)
-![badge](https://img.shields.io/badge/coding%20standards-not%20running-989898.svg)
+![badge](https://img.shields.io/badge/green--apple--tree-passing-99cc00.svg)
+![badge](https://img.shields.io/badge/green--apple--tree-failing-c53232.svg)
+![badge](https://img.shields.io/badge/green--apple--tree-not%20running-989898.svg)
 
 ## Customizing your badges
 
