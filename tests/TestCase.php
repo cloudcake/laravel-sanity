@@ -9,7 +9,6 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            \Sanity\SanityEventServiceProvider::class,
             \Sanity\SanityServiceProvider::class,
         ];
     }
