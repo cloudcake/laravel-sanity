@@ -81,7 +81,7 @@ class Factory
      */
     public function runRunners($commit = null)
     {
-        $commit = $commit ?? include(__DIR__.'/Fixtures/Forge.php');
+        $commit = $commit ?? include __DIR__.'/Fixtures/Forge.php';
 
         $this->checkEnvironment();
         $this->runPreRunners();
@@ -141,7 +141,7 @@ class Factory
      */
     private function checkEnvironment()
     {
-        $environmentCurrent  = env('APP_ENV', 'production');
+        $environmentCurrent = env('APP_ENV', 'production');
         $environmentsAllowed = config('environments', ['local', 'testing']);
 
         if (!in_array($environmentCurrent, $environmentsAllowed, true)) {

@@ -21,10 +21,10 @@ class SanityMock extends Command
     protected $description = 'Run Sanity checks as they it received a payload from Laravel Forge';
 
     /**
-    * Handle the command.
-    *
-    * @return void
-    */
+     * Handle the command.
+     *
+     * @return void
+     */
     public function handle()
     {
         \Facades\Sanity\Factory::runRunners();

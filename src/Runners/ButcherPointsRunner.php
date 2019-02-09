@@ -21,7 +21,7 @@ class ButcherPointsRunner extends Runner
     /**
      * Indicate whether or not this runner should fire events.
      *
-     * @var boolean
+     * @var bool
      */
     protected $shouldFireEvents = true;
 
@@ -35,14 +35,14 @@ class ButcherPointsRunner extends Runner
     /**
      * Indicate whether this runner collects stats.
      *
-     * @var boolean
+     * @var bool
      */
     protected $collectsStats = true;
 
     /**
-     * Map of points to allocate
+     * Map of points to allocate.
      *
-     * @var integer
+     * @var int
      */
     protected $points = -20;
 
