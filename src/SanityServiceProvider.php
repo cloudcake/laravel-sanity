@@ -22,6 +22,8 @@ class SanityServiceProvider extends EventServiceProvider
      */
     public function boot()
     {
+        parent::boot();
+        
         $this->publishes([
             __DIR__.'/Config/config.php' => config_path('sanity.php'),
         ], 'config');
