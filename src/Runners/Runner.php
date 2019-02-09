@@ -374,7 +374,7 @@ class Runner
     /**
      * Return number of points the test adds/substracts.
      *
-     * @return integer
+     * @return int
      */
     public function getPoints()
     {
