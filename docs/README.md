@@ -125,6 +125,8 @@ class WritableStorageTestRunner extends \Sanity\Runners\Runner
 {
     protected $name = 'Writable Storage';
 
+    protected $badgeLabel = 'Storage Test';
+
     protected function run() : void
     {
         if (is_writable(storage_path())) {
@@ -155,6 +157,8 @@ Sanity comes bundled with a test command (`\Sanity\Commands\SanityMock`) which m
 `php artisan sanity:mock`
 
 It's that simple. And you magically have a badge to display, check it out by opening your configured badges endpoint, defaults to `http://localhost/sanity/badges/writable-storage.svg`!
+
+![badge](https://img.shields.io/badge/Storage%20Test-passing-99cc00.svg)
 
 ### Available Runner Methods
 To be updated.
