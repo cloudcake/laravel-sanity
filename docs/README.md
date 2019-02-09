@@ -160,9 +160,8 @@ It's that simple. And you magically have a badge to display, check it out by ope
 
 ![badge](https://img.shields.io/badge/Storage%20Test-passing-99cc00.svg)
 
-### Available Attributes Methods
+### Available Attributes Options
 The base Sanity runner class contains a number of proctected attributes to customize your runners. See the complete list below:
-
 
 #### name
 `protected $name` `string` default: `Runner`
@@ -216,7 +215,14 @@ If set to true, the runner will run after all other runners that are not set to 
 ### Available Runner Methods
 The base Sanity runner class contains a number of proctected methods to customize your runners. See the complete list below:
 
-TO BE UPDATED.
+#### `markAsPassed()`
+`public function markAsPassed`
+
+Mark the runner as a success.
+
+#### `markAsFailed()`
+Mark the runner as a failure.
+
 
 ## Listening for results
 
