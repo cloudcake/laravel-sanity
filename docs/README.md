@@ -80,7 +80,7 @@ The unit runner runs your configured PHPUnit tests.
 #### Dusk Runner
 [(`\Sanity\Runners\DuskTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/DuskTestRunner.php)
 
-The dusk runner runsyour configured Laravel Dusk tests.
+The dusk runner runs your configured Laravel Dusk tests.
 
 #### Style Runner
 [(`\Sanity\Runners\StyleTestRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/StyleTestRunner.php)
@@ -101,6 +101,9 @@ The butcher points runner tracks the number of pushes a user has submitted that 
 [(`\Sanity\Runners\SaviourPointsRunner`)](https://github.com/stephenlake/laravel-sanity/blob/master/src/Runners/SaviourPointsRunner.php)
 
 The saviour points runner tracks the number of pushes a user has submitted that have fixed one or more broken tests and gives the user a  number of points and then creates a displayable string with the top 3 contributors which is displayed in its generated badge.
+
+### Creating Custom Runners
+To be updated.
 
 ## Listening for results
 
@@ -123,14 +126,14 @@ Create a `SanityEventSubscriber.php` file in `app/` with content:
 
     class SanityEventSubscriber extends SanitySubscriber;
     {
-        // Listeners discussed in the next section
+        // Event handlers discussed in the next section
     }
 
 ### Create subscriber event handlers
 
-Next we need to setup our subscriber to listen for events. Sanity fires off events based off of the runner (test) name and its state (`success` or `failure`). If the method does not exist on your subscriber, it simply does not fire the event.
+Next we need to setup our subscriber to listen for events. Sanity fires off events based off of the runner name and its state. If the method does not exist on your subscriber, it simply does not fire the event.
 
-For example, let's assume we have a runner named **UnitTest**, once the UnitTest runner has completed with success, Sanity will look for an event named on**UnitTest**Success, or for a failure it will look for an event named on**UnitTest**Failure, so we need to define these event methods:
+For example, let's assume we have a runner named **UnitTest**, once the UnitTest runner has finished with success, Sanity will look for an event named on**UnitTest**Success, or on a failure it will look for an event named on**UnitTest**Failure, so we need to define these event methods:
 
     <?php
 
@@ -151,10 +154,9 @@ For example, let's assume we have a runner named **UnitTest**, once the UnitTest
         }
     }
 
-And you're done. Now whenever a test is finished, your subscriber will be called instead of Sanity's default subscriber.
+These events should be defined for every runner you have configured in your configuration file.
 
-### Creating Custom Runners
-To be updated.
+**Note**: The name of the runner is not necessarily the file name prefix nor class name. You can view the name of each runner by opening their source code and viewing the `protected $name` attribute.
 
 # Extended Usage
 
