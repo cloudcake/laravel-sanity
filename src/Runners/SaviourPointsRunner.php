@@ -88,7 +88,6 @@ class SaviourPointsRunner extends Runner
         }
 
         $this->setResults($results);
-        $this->markAsPassed();
     }
 
     /**

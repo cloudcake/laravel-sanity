@@ -160,11 +160,63 @@ It's that simple. And you magically have a badge to display, check it out by ope
 
 ![badge](https://img.shields.io/badge/Storage%20Test-passing-99cc00.svg)
 
-### Available Runner Methods
-To be updated.
-
 ### Available Attributes Methods
-To be updated.
+The base Sanity runner class contains a number of proctected attributes to customize your runners. See the complete list below:
+
+
+#### name
+`protected $name` `string` default: `Runner`
+A unique name for the runner. Must be changed. Used for mapping runners and must be unique.
+
+#### badgeLabel
+`protected $badgeLabel` `string` default: `Runner`
+
+The label to display on the generated badge.
+
+#### badgeColourPassing
+`protected $badgeColourPassing` `string` default: `99cc00`
+
+The colour of the badge to display when the runner is passing. The value should be a hex value **without the leading hash (#)**.
+
+#### badgeColourFailing
+`protected $badgeColourFailing` `string` default: `c53232`
+
+The colour of the badge to display when the runner is failing. The value should be a hex value **without the leading hash (#)**.
+
+#### badgeColourUnknown
+`protected $badgeColourUnknown` `string` default: `989898`
+
+The colour of the badge to display when the runner is hasn't been run or is pending. The value should be a hex value **without the leading hash (#)**.
+
+#### badgeValuePassing
+`protected $badgeValuePassing` `string` default: `passing`
+
+The text to display when the runner is passing.
+
+#### badgeValueFailing
+`protected $badgeValueFailing` `string` default: `failing`
+
+The text to display when the runner is failing.
+
+#### badgeValueUnknown
+`protected $badgeValueUnknown` `string` default: `pending`
+
+The text to display when the runner hasn't run or is pending.
+
+#### shouldFireEvents
+`protected $shouldFireEvents` `boolean` default: `true`
+
+Boolean value indicated whether or not the runner should fire success and failure events once it has been run.
+
+#### collectsStats
+`protected $collectsStats` `boolean` default: `false`
+
+If set to true, the runner will run after all other runners that are not set to collect stats. This is useful when you need your runner to be executed after everything else has been run in order to collect the results of the other runners.
+
+### Available Runner Methods
+The base Sanity runner class contains a number of proctected methods to customize your runners. See the complete list below:
+
+TO BE UPDATED.
 
 ## Listening for results
 

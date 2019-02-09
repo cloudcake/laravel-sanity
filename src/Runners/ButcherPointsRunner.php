@@ -88,7 +88,6 @@ class ButcherPointsRunner extends Runner
         }
 
         $this->setResults($results);
-        $this->markAsPassed();
     }
 
     /**

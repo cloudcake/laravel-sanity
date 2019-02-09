@@ -82,7 +82,6 @@ class PusherPointsRunner extends Runner
         $results['status'] = str_replace('-', '--', implode(', ', $pushersTmp));
 
         $this->setResults($results);
-        $this->markAsPassed();
     }
 
     /**

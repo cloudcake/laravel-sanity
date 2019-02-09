@@ -89,7 +89,7 @@ class Runner
      *
      * @var string
      */
-    protected $badgeValuePending = 'pending';
+    protected $badgeValueUnknown = 'pending';
 
     /**
      * Indicate whether or not this runner should fire events.
@@ -134,6 +134,10 @@ class Runner
 
         try {
             $this->run();
+
+            if ($this->collectsStats()) {
+                $this->markAsPassed();
+            }
         } catch (\Exception $e) {
             $this->markAsFailed();
             $this->setResults([$e->getMessage()]);
@@ -310,7 +314,7 @@ class Runner
      */
     public function getBadgeStatus()
     {
-        $status = $this->badgeValuePending;
+        $status = $this->badgeValueUnknown;
 
         if ($this->passing()) {
             $status = $this->badgeValuePassing;
