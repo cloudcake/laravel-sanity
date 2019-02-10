@@ -34,22 +34,6 @@ class Factory
     }
 
     /**
-     * Get runner badge.
-     *
-     * @return \Illuminate\Routing\ResponseFactory
-     */
-    public static function badge($runnerName, $queryString = '')
-    {
-        $runner = self::$runners[Str::slug($runnerName)] ?? false;
-
-        if ($runner) {
-            return \Facades\Sanity\Badges::get($runner, $queryString);
-        }
-
-        return abort(404);
-    }
-
-    /**
      * Create instantiations of valid runners.
      *
      * @throws Exception If a duplicate runner name is found.
@@ -147,5 +131,66 @@ class Factory
         if (!in_array($environmentCurrent, $environmentsAllowed, true)) {
             exit;
         }
+    }
+
+    /**
+     * Get runner badge.
+     *
+     * @return \Illuminate\Routing\ResponseFactory
+     */
+    public function badge($runnerName, $queryString = '')
+    {
+        $runner = self::$runners[Str::slug($runnerName)] ?? false;
+
+        if ($runner) {
+            return \Facades\Sanity\Badges::get($runner, $queryString);
+        }
+
+        return abort(404);
+    }
+
+    /**
+     * Get runner results.
+     *
+     * @param string $runnerName Name of the runner.
+     *
+     * @return \Illuminate\Routing\ResponseFactory
+     */
+    public function results($runnerName)
+    {
+        if (auth()->user()) {
+            $result = false;
+            $runner = self::$runners[Str::slug($runnerName)] ?? false;
+
+            if ($runner) {
+                $result = $this->formatResult($runner->getResults());
+            }
+
+            if ($result) {
+                return $result;
+            }
+        }
+
+        return abort(404);
+    }
+
+    /**
+     * Format runner results.
+     *
+     * @param array $result The result array to format.
+     *
+     * @return array
+     */
+    private function formatResult($result)
+    {
+        if (($format = strtoupper(request()->query('format', 'array')))) {
+            switch ($format) {
+              case 'JSON':
+                $result = json_encode($result);
+                break;
+            }
+        }
+
+        return $result;
     }
 }

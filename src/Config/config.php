@@ -55,6 +55,19 @@ return [
 
   /*
   |--------------------------------------------------------------------------
+  | Results Route Endpoint
+  |--------------------------------------------------------------------------
+  |
+  | You can define your desired results endpoint route if the default does not
+  | suit your needs. This is the endpoint that provides output results of each
+  | runner.
+  |
+  */
+
+  'results' => '/sanity/results/{runner}',
+
+  /*
+  |--------------------------------------------------------------------------
   | Enabled Runners
   |--------------------------------------------------------------------------
   |
