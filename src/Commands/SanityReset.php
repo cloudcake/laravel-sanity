@@ -30,7 +30,7 @@ class SanityReset extends Command
     public function handle()
     {
         $factory = new Factory();
-        $cache   = Cache::store(config('sanity.cache', 'file'));
+        $cache = Cache::store(config('sanity.cache', 'file'));
 
         foreach (Factory::$runners as $runner) {
             $cache->forget("sanity.{$runner->getKeyName()}");
