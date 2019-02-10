@@ -337,7 +337,7 @@ The base subscriber is bundled with a little Slack helper to assist in submittin
            $commit = $runner->getCommit();
            $pusher = $commit['commit_author'];
 
-           if ($runner->wasSaved()) {
+           if ($runner->wasJustFixed()) {
              slack(self::MY_SLACK_WEHBOOK_URL)
                 ->success()
                 ->title("{$pusher} fixed the tests!")
@@ -354,7 +354,7 @@ The base subscriber is bundled with a little Slack helper to assist in submittin
 
         public function onMyRunnerFailure($runner)
         {
-            if ($runner->wasButchered()) {
+            if ($runner->wasJustBroken()) {
               slack(self::MY_SLACK_WEHBOOK_URL)
                  ->danger()
                  ->title("{$pusher} broke the tests!")
@@ -369,6 +369,8 @@ The base subscriber is bundled with a little Slack helper to assist in submittin
             }
         }
     }
+
+If the provider slack helpers are insufficient for your needs, you may submit raw payloads using the `raw()` method.
 
 # Extended Usage
 
