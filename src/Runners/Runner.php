@@ -165,6 +165,9 @@ class Runner
         if ($this->isCurrentlyFailing()) {
             $this->store['previousFailing'] = true;
             $this->store['previousPassing'] = false;
+        } else {
+            $this->store['previousFailing'] = false;
+            $this->store['previousPassing'] = true;
         }
 
         $this->store['state'] = 1;
@@ -184,6 +187,9 @@ class Runner
         if ($this->isCurrentlyPassing()) {
             $this->store['previousFailing'] = false;
             $this->store['previousPassing'] = true;
+        } else {
+            $this->store['previousFailing'] = true;
+            $this->store['previousPassing'] = false;
         }
 
         $this->store['state'] = 0;
