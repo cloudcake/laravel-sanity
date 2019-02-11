@@ -100,11 +100,7 @@ class ScoreboardRunner extends RunnerForMiniGame
         if (!isset($results['players'][$pusher])) {
             $results['players'][$pusher] = $points;
         } else {
-            if ($points < 0) {
-                $results['players'][$pusher] -= $points;
-            } else {
-                $results['players'][$pusher] += $points;
-            }
+            $results['players'][$pusher] += $points;
         }
 
         return $results;
