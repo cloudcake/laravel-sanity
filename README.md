@@ -21,7 +21,16 @@
 
 # Laravel Sanity
 
-**Laravel Sanity** is a **staging** package to assist in running your own unit testing and code standards automation on your staging/testing environment using [Laravel Forge](https://forge.laravel.com). Ideal for start-ups or teams that prefer a simple testing enrivonment over enterprise CI. Keep track of breakage scores and compete with your team in keeping your codebase clean! Now with badges!
+**Laravel Sanity** is a **staging** package to assist in running your own unit testing and code standards automation on your staging/testing environment using [Laravel Forge](https://forge.laravel.com). Ideal for start-ups or teams that prefer a simple testing enrivonment over enterprise CI. Keep track of breakage scores and compete with your team in keeping your codebase clean!
+
+<p align="center">
+    <strong>:gem: Now with badges :gem:</strong><br><br>
+    <a href="https://img.shields.io/badge/unit-passing-99cc00.svg"><img src="https://img.shields.io/badge/unit-passing-99cc00.svg?style=for-the-badge" alt=""></a>
+    <a href="https://img.shields.io/badge/dusk-passing-99cc00.svg"><img src="https://img.shields.io/badge/dusk-passing-99cc00.svg?style=for-the-badge" alt=""></a>
+    <a href="https://img.shields.io/badge/style-passing-99cc00.svg"><img src="https://img.shields.io/badge/style-passing-99cc00.svg?style=for-the-badge" alt=""></a>
+    <a href="https://img.shields.io/badge/your%20custom%20tests-passing-99cc00.svg"><img src="https://img.shields.io/badge/your%20custom%20tests-passing-99cc00.svg?style=for-the-badge" alt=""></a>
+    <br><br>
+</p>
 
 Made with ❤️ by [Stephen Lake](http://github.com/stephenlake)
 
