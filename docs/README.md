@@ -33,22 +33,6 @@ Open up your routes file (default: `routes/web.php`) and add:
 
 This will load the configured routes (in `config/sanity.php`).
 
-## Disable CSRF token verification for the `forge` route
-
-Forge fires a payload to your server whenever it is finished deploying, this URL needs to be accessible to forge and we therefore need to disable CSRF token verification for this specific route.
-
-Open up the `VerifyCsrfToken` class (default at `app/Http/Middleware/VerifyCsrfToken.php`) and add the forge webhook route:
-
-    protected $except = [
-        '/sanity/forge',
-    ];
-
-or you can disable with a wildcard:
-
-    protected $except = [
-        '/sanity/*',
-    ];
-
 ## Configure Laravel Forge
 
 It's important to keep in mind that this package is intended to be run on your staging/testing servers. While you may run it on production, it's highly discouraged as tests are run **after** the code has already been deployed.
