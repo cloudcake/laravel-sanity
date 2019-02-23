@@ -33,15 +33,17 @@ Open up your routes file (default: `routes/web.php`) and add:
 
 This will load the configured routes (in `config/sanity.php`).
 
-## Configure Laravel Forge
+## Configure Your Deployment Service
 
 It's important to keep in mind that this package is intended to be run on your staging/testing servers. While you may run it on production, it's highly discouraged as tests are run **after** the code has already been deployed.
 
-### Add the Sanity forge webhook
+### Configure the webhook
 
-The Sanity forge webhook is the URL that forge will fire its payload to once the code has been deployed, once received Sanity will process its tests.
+The Sanity webhook is the URL that must be hit to trigger Sanity to process its tests.
 
-Enter your full domain and the configured forge webhook endpoint into your apps forge configuration:
+Enter your full domain and the configured webhook endpoint into your deployment configuration:
+
+**Laravel Forge Example:**
 
 ![forge_deployment_webhook.png](https://github.com/stephenlake/laravel-sanity/raw/master/docs/assets/forge_deployment_webhook.png)
 
@@ -478,3 +480,7 @@ Since Sanity makes use of shields.io, any options provided by shields.io are app
 ## Custmizing your badge URL's
 
 Open up `config/sanity.php` and head to the `badges` block. Here you can define the endpoints needed to be hit on your application to retrieve badges.
+
+# Upgrading
+## From 1.1.3 to 1.2.0
+To be updated.
