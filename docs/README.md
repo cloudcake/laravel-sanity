@@ -478,5 +478,12 @@ Since Sanity makes use of shields.io, any options provided by shields.io are app
 Open up `config/sanity.php` and head to the `badges` block. Here you can define the endpoints needed to be hit on your application to retrieve badges.
 
 # Upgrading
+Any possible breaking changes in releases are documented here.
+
 ## From 1.1.3 to 1.2.0
-To be updated.
+Starting from v1.2.0, any deployment service that supports post-deployment webhook triggers are now supported by Sanity and because of this change, the word use of 'forge' has been dropped from configs and routes.
+
+- The configuration key previously named `forge` is now named `service`
+- The route endpoint previously setup as `/sanity/forge` is now set as `/sanity/build`
+
+Update your configs with the above and you're good to go.
