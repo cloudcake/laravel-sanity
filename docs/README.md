@@ -43,7 +43,7 @@ The Sanity webhook is the URL that must be hit to trigger Sanity to process its 
 
 ![forge_deployment_webhook.png](https://github.com/stephenlake/laravel-sanity/raw/master/docs/assets/forge_deployment_webhook.png)
 
-Where `example.org` is your applications **staging/testing** domain name and `/sanity/forge` is the endpoint you have configured in `config/sanity.php`.
+Where `example.org` is your applications **staging/testing** domain name and `/sanity/forge` is the endpoint you have configured in `config/sanity.php` under the `webhook` field.
 
 # Usage
 
@@ -469,9 +469,9 @@ Since Sanity makes use of shields.io, any options provided by shields.io are app
 
 `https://staging.example.org/sanity/badges/test.svg?style=social`:
 
-![badge](https://img.shields.io/badge/dusk-passing-99cc00.svg?style=social)
-![badge](https://img.shields.io/badge/dusk-failing-c53232.svg?style=social)
-![badge](https://img.shields.io/badge/dusk-not%20running-989898.svg?style=social)
+![badge](https://img.shields.io/badge/tests-passing-99cc00.svg?style=social)
+![badge](https://img.shields.io/badge/tests-failing-c53232.svg?style=social)
+![badge](https://img.shields.io/badge/tests-not%20running-989898.svg?style=social)
 
 ## Custmizing your badge URL's
 
@@ -483,7 +483,7 @@ Any possible breaking changes in releases are documented here.
 ## From 1.1.3 to 1.2.0
 Starting from v1.2.0, any deployment service that supports post-deployment webhook triggers are now supported by Sanity and because of this change, the word use of 'forge' has been dropped from configs and routes.
 
-- The configuration key previously named `forge` is now named `service`
-- The route endpoint previously setup as `/sanity/forge` is now set as `/sanity/build`
+- The configuration key previously named `forge` is now named `webhook`
+- The default webhook endpoint is now set as `/sanity/build`
 
 Update your configs with the above and you're good to go.
