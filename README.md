@@ -1,4 +1,6 @@
-
+<h6 align="center">
+    <img src="https://raw.githubusercontent.com/stephenlake/laravel-sanity/master/docs/assets/laravel-sanity-banner-v2.png"/>
+</h6>
 
 <h6 align="center">
     Self hosted in-app testing, coding standards and custom runner automation for Laravel. Now with badges!
