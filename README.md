@@ -3,7 +3,7 @@
 </h6>
 
 <h6 align="center">
-    Self hosted in-app test and coding standards automation for Laravel Forge. Now with badges!
+    Self hosted in-app testing, coding standards and custom runner automation for Laravel. Now with badges!
 </h6>
 
 <p align="center">
@@ -21,7 +21,7 @@
 
 # Laravel Sanity
 
-**Laravel Sanity** is a **staging** package to assist in running your own unit testing and code standards automation on your staging/testing environment using [Laravel Forge](https://forge.laravel.com). Ideal for start-ups or teams that prefer a simple testing environment over enterprise CI. Keep track of breakage scores and compete with your team in keeping your codebase clean!
+**Laravel Sanity** is a **staging** package to assist in running your own unit testing, code standards and custom runner automation on your staging/testing environment using any deployment service that allows post-deployment webhook triggers. Ideal for start-ups or teams that prefer a simple testing environment over enterprise CI. Keep track of breakage scores and compete with your team in keeping your codebase clean!
 
 <p align="center">
     <strong>:gem: Now with badges :gem:</strong><br><br>
