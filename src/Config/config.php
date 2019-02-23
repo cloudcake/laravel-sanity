@@ -18,6 +18,7 @@ return [
   |
   | Options: local, testing, production
   */
+
   'environments' => ['local', 'testing'],
 
   /*
@@ -34,7 +35,7 @@ return [
   |
   */
 
-  'webhook' => '/sanity/forge',
+  'webhook' => '/sanity/build',
 
   /*
   |--------------------------------------------------------------------------
