@@ -22,12 +22,11 @@ return [
 
   /*
   |--------------------------------------------------------------------------
-  | Forge Webhook Route Endpoint
+  | Webhook Route Endpoint
   |--------------------------------------------------------------------------
   |
-  | You may define your own forge webhook endpoint here. Change this as you
-  | wish but remember to update your application's forge webhook endpoint
-  | when changing this. See the documentation for more information.
+  | You may define your own webhook endpoint here. This is the endpoint that
+  | mustbe hit to trigger Sanity to execute all runners.
   |
   | It's recommended that you make this URL somewhat secretive by making it
   | a little more verbose than it currently is (add some long hash) to prevent
@@ -35,7 +34,7 @@ return [
   |
   */
 
-  'forge' => '/sanity/forge',
+  'webhook' => '/sanity/forge',
 
   /*
   |--------------------------------------------------------------------------
