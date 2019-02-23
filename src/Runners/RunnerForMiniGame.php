@@ -40,6 +40,6 @@ class RunnerForMiniGame extends Runner
      */
     public function getPusherName()
     {
-        return $this->getCommit()['commit_author'] ?? null;
+        return $this->getCommit()->author->name ?? null;
     }
 }

@@ -63,10 +63,8 @@ class Factory
      *
      * @return void
      */
-    public function runRunners($commit = null)
+    public function runRunners()
     {
-        $commit = $commit ?? include __DIR__.'/Fixtures/Forge.php';
-
         $this->checkEnvironment();
         $this->runPreRunners();
 
@@ -76,7 +74,7 @@ class Factory
         })->all();
 
         foreach (self::$runners as $runner) {
-            $runner->runNow($commit);
+            $runner->runNow();
         }
 
         $this->runPostRunners();
