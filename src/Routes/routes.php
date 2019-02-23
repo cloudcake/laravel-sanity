@@ -1,6 +1,6 @@
 <?php
 
-Route::post(config('sanity.service', '/sanity/build'), function () {
+Route::post(config('sanity.webhook', '/sanity/build'), function () {
     return \Facades\Sanity\Factory::runRunners(request()->all());
 });
 
