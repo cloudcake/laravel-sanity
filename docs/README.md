@@ -37,11 +37,7 @@ This will load the configured routes (in `config/sanity.php`).
 
 It's important to keep in mind that this package is intended to be run on your staging/testing servers. While you may run it on production, it's highly discouraged as tests are run **after** the code has already been deployed.
 
-### Configure the webhook
-
-The Sanity webhook is the URL that must be hit to trigger Sanity to process its tests.
-
-Enter your full domain and the configured webhook endpoint into your deployment configuration:
+The Sanity webhook is the URL that must be hit to trigger Sanity to process its tests. Enter your full domain and the configured webhook endpoint into your deployment configuration:
 
 **Laravel Forge Example:**
 
