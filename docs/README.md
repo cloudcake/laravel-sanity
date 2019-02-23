@@ -3,7 +3,7 @@
 </h6>
 
 <h6 align="center">
-    Self hosted in-app test and coding standards automation for Laravel Forge. Now with badges!
+    Self hosted in-app testing, coding standards and custom runner automation for Laravel. Now with badges!
 </h6>
 
 # Getting Started
