@@ -63,7 +63,7 @@ class Factory
      *
      * @return void
      */
-    public function runRunners()
+    public function runRunners($commit)
     {
         $this->checkEnvironment();
         $this->runPreRunners();
@@ -74,7 +74,7 @@ class Factory
         })->all();
 
         foreach (self::$runners as $runner) {
-            $runner->runNow();
+            $runner->runNow($commit);
         }
 
         $this->runPostRunners();
