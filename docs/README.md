@@ -10,7 +10,7 @@
 
 ## Install the package via composer
 
-    composer require stephenlake/laravel-sanity
+    composer require stephenlake/laravel-sanity --dev
 
 ## Register the service provider
 
@@ -279,7 +279,7 @@ For example, let's assume we have a runner named **UnitTest**, once the UnitTest
 
     use Sanity\Subscriber as SanitySubscriber;
 
-    class SanityEventSubscriber extends SanitySubscriber;
+    class SanityEventSubscriber extends SanitySubscriber
     {
         public function onUnitTestSuccess($runner)
         {
