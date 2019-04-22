@@ -1,25 +1,11 @@
-<h6 align="center">
-    <img src="https://raw.githubusercontent.com/stephenlake/laravel-sanity/master/docs/assets/laravel-sanity-banner-v2.png"/>
-</h6>
-
-<h6 align="center">
-    Self hosted in-app testing, coding standards and custom runner automation for Laravel. Now with badges!
-</h6>
-
-<p align="center">
-<a href="https://travis-ci.org/stephenlake/laravel-sanity"><img src="https://img.shields.io/travis/stephenlake/laravel-sanity/master.svg?style=flat-square" alt=""></a>
-<a href="https://github.styleci.io/repos/169525482"><img src="https://github.styleci.io/repos/169525482/shield?branch=master&style=flat-square" alt=""></a>
-<a href="https://scrutinizer-ci.com/g/stephenlake/laravel-sanity"><img src="https://img.shields.io/scrutinizer/g/stephenlake/laravel-sanity.svg?style=flat-square" alt=""></a>
-<a href="https://packagist.org/packages/stephenlake/laravel-sanity">
-<img src="https://img.shields.io/packagist/dt/stephenlake/laravel-sanity.svg?style=flat-square" alt="">
-</a>
-<a href="https://github.com/stephenlake/laravel-sanity"><img src="https://img.shields.io/github/release/stephenlake/laravel-sanity.svg?style=flat-square" alt=""></a>
-<a href="https://github.com/stephenlake/laravel-sanity/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt=""></a>
-</p>
-
-<br><br>
-
 # Laravel Sanity
+
+![tests](https://img.shields.io/travis/stephenlake/laravel-sanity/master.svg?style=flat-square)
+![styleci](https://github.styleci.io/repos/169525482/shield?branch=master&style=flat-square)
+![scrutinzer](https://img.shields.io/scrutinizer/g/stephenlake/laravel-sanity.svg?style=flat-square)
+![downloads](https://img.shields.io/packagist/dt/stephenlake/laravel-sanity.svg?style=flat-square)
+![release](https://img.shields.io/github/release/stephenlake/laravel-sanity.svg?style=flat-square)
+![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)
 
 **Laravel Sanity** is a **staging** package to assist in running your own unit testing, code standards and custom runner automation on your staging/testing environment using any deployment service that allows post-deployment webhook triggers. Ideal for start-ups or teams that prefer a simple testing environment over enterprise CI. Keep track of breakage scores and compete with your team in keeping your codebase clean!
 
