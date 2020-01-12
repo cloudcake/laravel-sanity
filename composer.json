@@ -1,5 +1,5 @@
 {
-  "name": "stephenlake/laravel-sanity",
+  "name": "cloudcake/laravel-sanity",
   "description": "Automate builds and code standards sniffing. Now with badges.",
   "keywords": ["automate", "ci", "testing", "badges"],
   "license": "MIT",
