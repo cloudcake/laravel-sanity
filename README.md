@@ -15,7 +15,7 @@ Made with ❤️ by [Stephen Lake](http://github.com/stephenlake)
 
 Install the package via composer.
 
-    composer require stephenlake/laravel-sanity
+    composer require cloudcake/laravel-sanity
 
 #### See [documentation](https://stephenlake.github.io/laravel-sanity/) for full installation and getting started.
 
